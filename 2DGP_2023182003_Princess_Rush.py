@@ -8,6 +8,30 @@ class Page:
     def draw(self):
         pass
 
+class Player:
+    def __init__(self):
+        pass
+    def update(self):
+        pass
+    def draw(self):
+        pass
+
+class Gold:
+    def __init__(self):
+        pass
+    def update(self):
+        pass
+    def draw(self):
+        pass
+
+class Floor:
+    def __init__(self):
+        pass
+    def update(self):
+        pass
+    def draw(self):
+        pass
+
 def handle_events():
     global running
     events = get_events()
