@@ -1,4 +1,5 @@
 from pico2d import*
+import random
 from princess import*
 
 class Page:
@@ -51,7 +52,7 @@ def render_world():
     update_canvas()
 
 def main():
-    open_canvas()
+    open_canvas(1200, 600)
     reset_world()
     while running:
         handle_events()
