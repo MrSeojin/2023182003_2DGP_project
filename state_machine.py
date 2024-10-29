@@ -1,7 +1,23 @@
 #이벤트 체크 함수 정의
+from sdl2 import SDL_KEYDOWN, SDLK_SPACE, SDLK_c
 
 def start_event(e):
     return e[0] == 'START'
+
+def time_out(e):
+    return e[0] == 'TIME_OUT'
+
+def space_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_SPACE
+
+def c_down(e):
+    return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_c
+
+def death(e):
+    return e[0] == 'DEATH'
+
+def fly_item(e):
+    return e[0] == 'FLY_ITEM'
 
 class StateMachine:
     def __init__(self, obj):

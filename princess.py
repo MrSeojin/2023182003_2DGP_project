@@ -89,6 +89,23 @@ class Fly:
     def draw(princess):
         pass
 
+class Die:
+    @staticmethod
+    def enter(princess, e):
+        pass
+
+    @staticmethod
+    def exit(princess, e):
+        pass
+
+    @staticmethod
+    def do(princess):
+        pass
+
+    @staticmethod
+    def draw(princess):
+        pass
+
 class Princess:
     def __init__(self):
         self.x, self.y = 300, 150
@@ -99,11 +116,11 @@ class Princess:
         self.state_machine.start(Run)
         self.state_machine.set_transitions(
             {
-                Run : {},
-                Hit : {},
-                Jump : {},
-                DoubleJump : {},
-                Fly : {}
+                Run : {c_down : Hit, space_down : Jump, death : Die},
+                Hit : {time_out : Run, death : Die},
+                Jump : {c_down : Hit, space_down : DoubleJump, time_out : Run, fly_item : Fly, death : Die},
+                DoubleJump : {c_down : Hit, time_out : Run, fly_item : Fly, death : Die},
+                Fly : {time_out : Run}
             }
         )
     def update(self):
