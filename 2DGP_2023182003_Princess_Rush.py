@@ -1,14 +1,7 @@
 from pico2d import*
+from princess import*
 
 class Page:
-    def __init__(self):
-        pass
-    def update(self):
-        pass
-    def draw(self):
-        pass
-
-class Player:
     def __init__(self):
         pass
     def update(self):
