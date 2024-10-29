@@ -36,10 +36,13 @@ def handle_events():
 def reset_world():
     global running
     global world
+    global princess
     running = True
     world = []
-    page = Page()
-    world.append(page)
+#    page = Page()
+#    world.append(page)
+    princess = Princess()
+    world.append(princess)
 
 def update_world():
     for o in world:
@@ -58,7 +61,7 @@ def main():
         handle_events()
         update_world()
         render_world()
-        delay(0.05)
+        delay(0.03)
     close_canvas()
 
 if __name__=='__main__':
