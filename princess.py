@@ -26,7 +26,7 @@ class Run:
 class Hit:
     @staticmethod
     def enter(princess, e):
-        princess.frame, princess.action = 0, 3
+        princess.frame, princess.action = 0, 2
         princess.count = 0
 
     @staticmethod
@@ -35,10 +35,8 @@ class Hit:
 
     @staticmethod
     def do(princess):
-        princess.count += 1
-        if princess.count % 2 == 1:
-            princess.frame += 1
-        if princess.frame >= 4:
+        princess.frame += 1
+        if princess.frame >= 10:
             princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
