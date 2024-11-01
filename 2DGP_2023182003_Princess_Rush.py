@@ -12,11 +12,14 @@ class Page:
 
 class Gold:
     def __init__(self):
-        pass
+        self.x, self.y = 500, 300
+        self.frame, self.action = 0, 0
+        self.dir = 0
+        self.image = load_image('coin.png')
     def update(self):
-        pass
+        self.frame = (self.frame + 1) % 4
     def draw(self):
-        pass
+        self.image.clip_draw(self.frame * 25, self.action * 25, 25, 25, self.x, self.y)
 
 class Floor:
     def __init__(self):
@@ -39,12 +42,15 @@ def reset_world():
     global running
     global world
     global princess
+    global coin
     running = True
     world = []
 #    page = Page()
 #    world.append(page)
     princess = Princess()
     world.append(princess)
+    coin = Gold()
+    world.append(coin)
 
 def update_world():
     for o in world:
