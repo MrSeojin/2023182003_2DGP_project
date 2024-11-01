@@ -4,9 +4,11 @@ from state_machine import*
 class Run:
     @staticmethod
     def enter(princess, e):
-        princess.frame, princess.action = 0, 0
+        princess.action = 0
         if time_out(e):
-            princess.frame = 10
+            pass
+        else:
+            princess.frame = 0
 
     @staticmethod
     def exit(princess, e):
@@ -46,7 +48,11 @@ class Hit:
 class Jump:
     @staticmethod
     def enter(princess, e):
-        princess.frame, princess.action = 0, 1
+        princess.action = 1
+        if time_out(e):
+            princess.frame = 6
+        else:
+            princess.frame = 0
 
     @staticmethod
     def exit(princess, e):
@@ -54,12 +60,20 @@ class Jump:
 
     @staticmethod
     def do(princess):
-        princess.frame += 1
-        if princess.frame <= 6:
-            princess.y += 20
+        if princess.action == 1:
+            princess.frame += 1
+            if princess.frame <= 6:
+                princess.y += 20
+            else:
+                princess.y -= 20
+            if princess.frame >= 12:
+                princess.action = 0
         else:
-            princess.y -= 20
-        if princess.frame >= 12:
+            princess.frame = (princess.frame + 1) % 16
+            princess.y -= 10
+            if princess.y < 150:
+                princess.y = 150
+        if princess.y == 150:
             princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
@@ -69,7 +83,7 @@ class Jump:
 class DoubleJump:
     @staticmethod
     def enter(princess, e):
-        pass
+        princess.frame, princess.action = 0, 3
 
     @staticmethod
     def exit(princess, e):
@@ -77,7 +91,27 @@ class DoubleJump:
 
     @staticmethod
     def do(princess):
-        pass
+        if princess.action == 3:
+            if princess.frame < 6:
+                princess.frame += 1
+                if princess.frame <= 2:
+                    princess.y += 20
+                elif princess.frame == 6:
+                    princess.action = 1
+        elif princess.action == 1:
+            princess.frame += 1
+            princess.y -= 20
+            if princess.frame >= 12:
+                princess.action = 0
+            if princess.y < 150:
+                princess.y = 150
+        else:
+            princess.frame = (princess.frame + 1) % 16
+            princess.y -= 10
+            if princess.y < 150:
+                princess.y = 150
+        if princess.y == 150:
+            princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
@@ -130,7 +164,7 @@ class Princess:
                 Run : {c_down : Hit, space_down : Jump, death : Die},
                 Hit : {time_out : Run, death : Die},
                 Jump : {c_down : Hit, space_down : DoubleJump, time_out : Run, fly_item : Fly, death : Die},
-                DoubleJump : {c_down : Hit, time_out : Run, fly_item : Fly, death : Die},
+                DoubleJump : {time_out : Run, fly_item : Fly, death : Die},
                 Fly : {time_out : Run}
             }
         )
