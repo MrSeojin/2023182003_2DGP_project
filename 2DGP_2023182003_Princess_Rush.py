@@ -32,6 +32,8 @@ def handle_events():
     for event in events:
         if event.type == SDL_QUIT:
             running = False
+        else:
+            princess.handle_event(event)
 
 def reset_world():
     global running
@@ -61,7 +63,7 @@ def main():
         handle_events()
         update_world()
         render_world()
-        delay(0.03)
+        delay(0.05)
     close_canvas()
 
 if __name__=='__main__':

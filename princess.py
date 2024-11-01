@@ -5,6 +5,8 @@ class Run:
     @staticmethod
     def enter(princess, e):
         princess.frame, princess.action = 0, 0
+        if time_out(e):
+            princess.frame = 10
 
     @staticmethod
     def exit(princess, e):
@@ -19,12 +21,13 @@ class Run:
             princess.y = 150
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 100, princess.action * 100, 100, 100, princess.x, princess.y, 200, 200)
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
 
 class Hit:
     @staticmethod
     def enter(princess, e):
-        pass
+        princess.frame, princess.action = 0, 3
+        princess.count = 0
 
     @staticmethod
     def exit(princess, e):
@@ -32,16 +35,20 @@ class Hit:
 
     @staticmethod
     def do(princess):
-        pass
+        princess.count += 1
+        if princess.count % 2 == 1:
+            princess.frame += 1
+        if princess.frame >= 4:
+            princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
-        pass
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
 
 class Jump:
     @staticmethod
     def enter(princess, e):
-        pass
+        princess.frame, princess.action = 0, 1
 
     @staticmethod
     def exit(princess, e):
@@ -49,11 +56,17 @@ class Jump:
 
     @staticmethod
     def do(princess):
-        pass
+        princess.frame += 1
+        if princess.frame <= 6:
+            princess.y += 20
+        else:
+            princess.y -= 20
+        if princess.frame >= 12:
+            princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
-        pass
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
 
 class DoubleJump:
     @staticmethod
@@ -70,7 +83,7 @@ class DoubleJump:
 
     @staticmethod
     def draw(princess):
-        pass
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
 
 class Fly:
     @staticmethod
@@ -87,7 +100,7 @@ class Fly:
 
     @staticmethod
     def draw(princess):
-        pass
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
 
 class Die:
     @staticmethod
@@ -104,14 +117,14 @@ class Die:
 
     @staticmethod
     def draw(princess):
-        pass
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
 
 class Princess:
     def __init__(self):
         self.x, self.y = 300, 150
         self.frame, self.action = 0, 0
         self.dir = 0
-        self.image = load_image('princess_snow_run_animation.png')
+        self.image = load_image('princess_snow_animation_sheet.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start(Run)
         self.state_machine.set_transitions(
