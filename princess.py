@@ -18,7 +18,7 @@ class Run:
     def do(princess):
         princess.frame = (princess.frame + 1) % 16
         if princess.y > 150:
-            princess.y -= 10
+            princess.y -= 20
         if princess.y < 150:
             princess.y = 150
     @staticmethod
@@ -45,6 +45,38 @@ class Hit:
     def draw(princess):
         princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
 
+class BigHit:
+    @staticmethod
+    def enter(princess, e):
+        princess.frame, princess.action = 10, 2
+        princess.count = 0
+
+    @staticmethod
+    def exit(princess, e):
+        pass
+
+    @staticmethod
+    def do(princess):
+        if princess.action == 2:
+            princess.frame += 1
+            if princess.frame >= 16:
+                princess.action = 0
+                princess.frame = 10
+            princess.y -= 10
+            if princess.y < 150:
+                princess.y = 150
+        else:
+            princess.frame = (princess.frame + 1) % 16
+            princess.y -= 20
+            if princess.y < 150:
+                princess.y = 150
+        if princess.y == 150:
+            princess.state_machine.add_event(('TIME_OUT', 0))
+
+    @staticmethod
+    def draw(princess):
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
+
 class Jump:
     @staticmethod
     def enter(princess, e):
@@ -63,14 +95,15 @@ class Jump:
         if princess.action == 1:
             princess.frame += 1
             if princess.frame <= 6:
-                princess.y += 20
+                princess.y += 30
             else:
-                princess.y -= 20
+                princess.y -= 30
             if princess.frame >= 12:
                 princess.action = 0
+                princess.frame = 10
         else:
             princess.frame = (princess.frame + 1) % 16
-            princess.y -= 10
+            princess.y -= 20
             if princess.y < 150:
                 princess.y = 150
         if princess.y == 150:
@@ -92,24 +125,22 @@ class DoubleJump:
     @staticmethod
     def do(princess):
         if princess.action == 3:
-            if princess.frame < 6:
-                princess.frame += 1
-                if princess.frame <= 2:
-                    princess.y += 20
-                elif princess.frame == 6:
-                    princess.action = 1
+            princess.frame += 1
+            princess.y += 30
+            if princess.frame >= 6:
+                princess.action = 1
+                princess.frame = 5
         elif princess.action == 1:
             princess.frame += 1
-            princess.y -= 20
+            princess.y -= 30
             if princess.frame >= 12:
                 princess.action = 0
-            if princess.y < 150:
-                princess.y = 150
+                princess.frame = 10
         else:
             princess.frame = (princess.frame + 1) % 16
-            princess.y -= 10
-            if princess.y < 150:
-                princess.y = 150
+            princess.y -= 20
+        if princess.y < 150:
+            princess.y = 150
         if princess.y == 150:
             princess.state_machine.add_event(('TIME_OUT', 0))
 
@@ -163,9 +194,11 @@ class Princess:
             {
                 Run : {c_down : Hit, space_down : Jump, death : Die},
                 Hit : {time_out : Run, death : Die},
-                Jump : {c_down : Hit, space_down : DoubleJump, time_out : Run, fly_item : Fly, death : Die},
-                DoubleJump : {time_out : Run, fly_item : Fly, death : Die},
+                BigHit : {time_out : Run, fly_item : Fly, death : Die},
+                Jump : {c_down : BigHit, space_down : DoubleJump,  time_out : Run, fly_item : Fly, death : Die},
+                DoubleJump : {c_down : BigHit, time_out : Run, fly_item : Fly, death : Die},
                 Fly : {time_out : Run}
+
             }
         )
     def update(self):
