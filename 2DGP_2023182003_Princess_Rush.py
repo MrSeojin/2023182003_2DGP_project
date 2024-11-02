@@ -1,6 +1,8 @@
 from pico2d import*
 import random
 from princess import*
+from slime import*
+from mushroom import*
 
 class Page:
     def __init__(self):
