@@ -1,8 +1,7 @@
 from pico2d import*
 import random
 from princess import*
-from slime import*
-from mushroom import*
+from mob import*
 
 class Page:
     def __init__(self):
@@ -45,6 +44,7 @@ def reset_world():
     global world
     global princess
     global coin
+    global mob
     running = True
     world = []
 #    page = Page()
@@ -53,6 +53,8 @@ def reset_world():
     world.append(princess)
     coin = Gold()
     world.append(coin)
+    mob = Mob()
+    world.append(mob)
 
 def update_world():
     for o in world:
