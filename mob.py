@@ -14,10 +14,14 @@ class Idle:
     @staticmethod
     def do(mob):
         mob.frame += 1
-        if mob.type == 0 and mob.frame >= 3:
+        if mob.type == 0 and mob.frame >= 3 and mob.dir != 0:
             mob.state_machine.add_event(('TIME_OUT', 0))
-        if mob.type != 0 and mob.frame >= 2:
+        elif mob.type == 0:
+            mob.frame %= 3
+        if mob.type != 0 and mob.frame >= 2 and mob.dir != 0:
             mob.state_machine.add_event(('TIME_OUT', 0))
+        elif mob.type != 0:
+            mob.frame %= 2
 
     @staticmethod
     def draw(mob):
@@ -37,6 +41,7 @@ class Move:
 
     @staticmethod
     def do(mob):
+        mob.x += mob.dir
         if mob.type == 0:
             mob.frame = (mob.frame + 1) % 7
         else:
@@ -45,9 +50,15 @@ class Move:
     @staticmethod
     def draw(mob):
         if mob.type == 0:
-            mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y)
+            if mob.dir < 0:
+                mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y)
+            else:
+                mob.image.clip_composite_draw(mob.frame * 70, mob.action * 85, 70, 85, 0, 'h', mob.x, mob.y, 70, 85)
         else:
-            mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y)
+            if mob.dir < 0:
+                mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y)
+            else:
+                mob.image.clip_composite_draw(mob.frame * 65, mob.action * 65, 65, 65, 0, 'h', mob.x, mob.y, 65, 65)
 
 class Jump:
     @staticmethod
@@ -118,7 +129,7 @@ class Mob:
         self.delay = 0
         self.x, self.y = 799, 50
         self.frame, self.action = 0, 0
-        self.dir = 0
+        self.dir = random.randint(-1,1)
         self.type = random.randint(0, 2)
         if self.type == 0:
             self.image = load_image('mob_slime_animation_sheet.png')
