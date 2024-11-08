@@ -25,10 +25,11 @@ class Idle:
 
     @staticmethod
     def draw(mob):
+
         if mob.type == 0:
-            mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y)
+            mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
         else:
-            mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y)
+            mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
 
 class Move:
     @staticmethod
@@ -51,14 +52,14 @@ class Move:
     def draw(mob):
         if mob.type == 0:
             if mob.dir < 0:
-                mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y)
+                mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
             else:
-                mob.image.clip_composite_draw(mob.frame * 70, mob.action * 85, 70, 85, 0, 'h', mob.x, mob.y, 70, 85)
+                mob.image.clip_composite_draw(mob.frame * 70, mob.action * 85, 70, 85, 0, 'h', mob.x, mob.y + 85 / 2, 70, 85)
         else:
             if mob.dir < 0:
-                mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y)
+                mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
             else:
-                mob.image.clip_composite_draw(mob.frame * 65, mob.action * 65, 65, 65, 0, 'h', mob.x, mob.y, 65, 65)
+                mob.image.clip_composite_draw(mob.frame * 65, mob.action * 65, 65, 65, 0, 'h', mob.x, mob.y + 65 / 2, 65, 65)
 
 class Jump:
     @staticmethod
@@ -76,9 +77,9 @@ class Jump:
     @staticmethod
     def draw(mob):
         if mob.type == 0:
-            mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y)
+            mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
         else:
-            mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y)
+            mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
 
 class Hit:
     @staticmethod
@@ -96,9 +97,9 @@ class Hit:
     @staticmethod
     def draw(mob):
         if mob.type == 0:
-            mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y)
+            mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
         else:
-            mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y)
+            mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
 
 class Die:
     @staticmethod
@@ -127,7 +128,7 @@ class Die:
 class Mob:
     def __init__(self):
         self.delay = 0
-        self.x, self.y = 799, 50
+        self.x, self.y = 799, 60
         self.frame, self.action = 0, 0
         self.dir = random.randint(-1,1)
         self.type = random.randint(0, 2)

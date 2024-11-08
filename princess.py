@@ -17,13 +17,13 @@ class Run:
     @staticmethod
     def do(princess):
         princess.frame = (princess.frame + 1) % 16
-        if princess.y > 150:
-            princess.y -= 20
-        if princess.y < 150:
-            princess.y = 150
+        if princess.y > 60:
+            princess.y -= 10
+        if princess.y < 60:
+            princess.y = 60
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
 
 class Hit:
     @staticmethod
@@ -43,7 +43,7 @@ class Hit:
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
 
 class BigHit:
     @staticmethod
@@ -63,19 +63,17 @@ class BigHit:
                 princess.action = 0
                 princess.frame = 10
             princess.y -= 10
-            if princess.y < 150:
-                princess.y = 150
         else:
             princess.frame = (princess.frame + 1) % 16
             princess.y -= 20
-            if princess.y < 150:
-                princess.y = 150
-        if princess.y == 150:
+        if princess.y < 60:
+            princess.y = 60
+        if princess.y == 60:
             princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
 
 class Jump:
     @staticmethod
@@ -104,14 +102,14 @@ class Jump:
         else:
             princess.frame = (princess.frame + 1) % 16
             princess.y -= 20
-            if princess.y < 150:
-                princess.y = 150
-        if princess.y == 150:
+        if princess.y < 60:
+            princess.y = 60
+        if princess.y == 60:
             princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
 
 class DoubleJump:
     @staticmethod
@@ -139,14 +137,14 @@ class DoubleJump:
         else:
             princess.frame = (princess.frame + 1) % 16
             princess.y -= 20
-        if princess.y < 150:
-            princess.y = 150
-        if princess.y == 150:
+        if princess.y < 60:
+            princess.y = 60
+        if princess.y == 60:
             princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
 
 class Fly:
     @staticmethod
@@ -163,7 +161,7 @@ class Fly:
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
 
 class Die:
     @staticmethod
@@ -180,11 +178,12 @@ class Die:
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y)
+        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
 
 class Princess:
     def __init__(self):
-        self.x, self.y = 300, 150
+        self.x, self.y = 300, 60
+
         self.frame, self.action = 0, 0
         self.dir = 0
         self.image = load_image('princess_snow_animation_sheet.png')

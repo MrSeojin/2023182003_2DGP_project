@@ -4,6 +4,7 @@ from pico2d import *
 import game_world
 import title_mode
 from back_ground import Background
+from floor import Floor
 from princess import Princess
 from mob import Mob
 
@@ -30,9 +31,11 @@ def init():
     background = Background()
     game_world.add_object(background, 0)
     princess = Princess()
-    game_world.add_object(princess, 1)
+    game_world.add_object(princess, 2)
     mob = Mob()
-    game_world.add_object(mob, 1)
+    game_world.add_object(mob, 2)
+    floor = Floor()
+    game_world.add_object(floor, 1)
 
 
 def finish():
