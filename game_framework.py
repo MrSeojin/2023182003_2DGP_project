@@ -1,4 +1,5 @@
 from game_world import*
+import time
 
 running = None
 stack = None
