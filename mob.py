@@ -1,6 +1,20 @@
 from pico2d import*
 import random
+
+import game_framework
 from state_machine import*
+
+# mob Run Speed
+PIXEL_PER_METER = (10.0 / 0.2)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+# ,ob Action Speed
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 4
 
 class Idle:
     @staticmethod
@@ -13,13 +27,12 @@ class Idle:
 
     @staticmethod
     def do(mob):
-        mob.frame += 1
-        if mob.type == 0 and mob.frame >= 3 and mob.dir != 0:
+        mob.x -= RUN_SPEED_PPS * game_framework.frame_time
+        mob.frame += FRAMES_PER_ACTION * ACTION_PER_TIME*game_framework.frame_time
+        if mob.x < 700 and mob.dir != 0:
             mob.state_machine.add_event(('TIME_OUT', 0))
         elif mob.type == 0:
             mob.frame %= 3
-        if mob.type != 0 and mob.frame >= 2 and mob.dir != 0:
-            mob.state_machine.add_event(('TIME_OUT', 0))
         elif mob.type != 0:
             mob.frame %= 2
 
@@ -27,9 +40,9 @@ class Idle:
     def draw(mob):
 
         if mob.type == 0:
-            mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
+            mob.image.clip_draw(int(mob.frame) * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
         else:
-            mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
+            mob.image.clip_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
 
 class Move:
     @staticmethod
@@ -42,24 +55,24 @@ class Move:
 
     @staticmethod
     def do(mob):
-        mob.x += mob.dir
+        mob.x += 2 * mob.dir * RUN_SPEED_PPS * game_framework.frame_time
         if mob.type == 0:
-            mob.frame = (mob.frame + 1) % 7
+            mob.frame = (mob.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 7
         else:
-            mob.frame = (mob.frame + 1) % 3
+            mob.frame = (mob.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 3
 
     @staticmethod
     def draw(mob):
         if mob.type == 0:
             if mob.dir < 0:
-                mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
+                mob.image.clip_draw(int(mob.frame) * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
             else:
-                mob.image.clip_composite_draw(mob.frame * 70, mob.action * 85, 70, 85, 0, 'h', mob.x, mob.y + 85 / 2, 70, 85)
+                mob.image.clip_composite_draw(int(mob.frame) * 70, mob.action * 85, 70, 85, 0, 'h', mob.x, mob.y + 85 / 2, 70, 85)
         else:
             if mob.dir < 0:
-                mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
+                mob.image.clip_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
             else:
-                mob.image.clip_composite_draw(mob.frame * 65, mob.action * 65, 65, 65, 0, 'h', mob.x, mob.y + 65 / 2, 65, 65)
+                mob.image.clip_composite_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, 0, 'h', mob.x, mob.y + 65 / 2, 65, 65)
 
 class Jump:
     @staticmethod
@@ -77,9 +90,9 @@ class Jump:
     @staticmethod
     def draw(mob):
         if mob.type == 0:
-            mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
+            mob.image.clip_draw(int(mob.frame) * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
         else:
-            mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
+            mob.image.clip_draw(int(mob.frame)* 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
 
 class Hit:
     @staticmethod
@@ -97,9 +110,9 @@ class Hit:
     @staticmethod
     def draw(mob):
         if mob.type == 0:
-            mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
+            mob.image.clip_draw(int(mob.frame) * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
         else:
-            mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
+            mob.image.clip_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
 
 class Die:
     @staticmethod
@@ -112,7 +125,7 @@ class Die:
 
     @staticmethod
     def do(mob):
-        mob.frame += 1
+        mob.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
         if mob.type == 0 and mob.frame >= 4:
             mob.state_machine.add_event(('TIME_OUT', 0))
         elif mob.type !=0 and mob.frame >= 3:
@@ -121,14 +134,14 @@ class Die:
     @staticmethod
     def draw(mob):
         if mob.type == 0:
-            mob.image.clip_draw(mob.frame * 70, mob.action * 85, 70, 85, mob.x, mob.y)
+            mob.image.clip_draw(int(mob.frame) * 70, mob.action * 85, 70, 85, mob.x, mob.y)
         else:
-            mob.image.clip_draw(mob.frame * 65, mob.action * 65, 65, 65, mob.x, mob.y)
+            mob.image.clip_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, mob.x, mob.y)
 
 class Mob:
     def __init__(self):
         self.delay = 0
-        self.x, self.y = 799, 60
+        self.x, self.y = 1250, 60
         self.frame, self.action = 0, 0
         self.dir = random.randint(-1,1)
         self.type = random.randint(0, 2)
