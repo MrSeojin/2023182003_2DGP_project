@@ -1,5 +1,19 @@
 from pico2d import*
+
+import game_framework
 from state_machine import*
+
+# princess Run Speed
+PIXEL_PER_METER = (10.0 / 0.2)  # 10 pixel 30 cm
+RUN_SPEED_KMPH = 20.0  # Km / Hour
+RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
+RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
+RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+
+# princess Action Speed
+TIME_PER_ACTION = 0.5
+ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
+FRAMES_PER_ACTION = 16
 
 class Run:
     @staticmethod
@@ -16,14 +30,14 @@ class Run:
 
     @staticmethod
     def do(princess):
-        princess.frame = (princess.frame + 1) % 16
+        princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
         if princess.y > 60:
-            princess.y -= 10
+            princess.y -= RUN_SPEED_PPS * game_framework.frame_time
         if princess.y < 60:
             princess.y = 60
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
+        princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
 
 class Hit:
     @staticmethod
@@ -37,13 +51,13 @@ class Hit:
 
     @staticmethod
     def do(princess):
-        princess.frame += 1
+        princess.frame +=  FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
         if princess.frame >= 10:
             princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
+        princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
 
 class BigHit:
     @staticmethod
@@ -58,14 +72,14 @@ class BigHit:
     @staticmethod
     def do(princess):
         if princess.action == 2:
-            princess.frame += 1
+            princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
             if princess.frame >= 16:
                 princess.action = 0
                 princess.frame = 10
-            princess.y -= 10
+            princess.y -= RUN_SPEED_PPS * game_framework.frame_time
         else:
-            princess.frame = (princess.frame + 1) % 16
-            princess.y -= 20
+            princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
+            princess.y -= 2 * RUN_SPEED_PPS * game_framework.frame_time
         if princess.y < 60:
             princess.y = 60
         if princess.y == 60:
@@ -73,7 +87,7 @@ class BigHit:
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
+        princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
 
 class Jump:
     @staticmethod
@@ -91,25 +105,25 @@ class Jump:
     @staticmethod
     def do(princess):
         if princess.action == 1:
-            princess.frame += 1
+            princess.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
             if princess.frame <= 6:
-                princess.y += 30
+                princess.y += 3 * RUN_SPEED_PPS * game_framework.frame_time
             else:
-                princess.y -= 30
+                princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
             if princess.frame >= 12:
                 princess.action = 0
                 princess.frame = 10
         else:
-            princess.frame = (princess.frame + 1) % 16
-            princess.y -= 20
+            princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
+            princess.y -= 2 * RUN_SPEED_PPS * game_framework.frame_time
         if princess.y < 60:
-            princess.y = 60
+                princess.y = 60
         if princess.y == 60:
             princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
+        princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
 
 class DoubleJump:
     @staticmethod
@@ -123,20 +137,20 @@ class DoubleJump:
     @staticmethod
     def do(princess):
         if princess.action == 3:
-            princess.frame += 1
-            princess.y += 30
+            princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
+            princess.y += 3 * RUN_SPEED_PPS * game_framework.frame_time
             if princess.frame >= 6:
                 princess.action = 1
                 princess.frame = 5
         elif princess.action == 1:
-            princess.frame += 1
-            princess.y -= 30
+            princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
+            princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
             if princess.frame >= 12:
                 princess.action = 0
                 princess.frame = 10
         else:
-            princess.frame = (princess.frame + 1) % 16
-            princess.y -= 20
+            princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
+            princess.y -= 2 * RUN_SPEED_PPS * game_framework.frame_time
         if princess.y < 60:
             princess.y = 60
         if princess.y == 60:
@@ -144,7 +158,7 @@ class DoubleJump:
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
+        princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
 
 class Fly:
     @staticmethod
@@ -161,7 +175,7 @@ class Fly:
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
+        princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
 
 class Die:
     @staticmethod
@@ -178,14 +192,13 @@ class Die:
 
     @staticmethod
     def draw(princess):
-        princess.image.clip_draw(princess.frame * 300, princess.action * 300, 300, 300, princess.x, princess.y + 135)
+        princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
 
 class Princess:
     def __init__(self):
         self.x, self.y = 300, 60
 
         self.frame, self.action = 0, 0
-        self.dir = 0
         self.image = load_image('princess_snow_animation_sheet.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start(Run)
