@@ -23,6 +23,7 @@ def update():
 
 def draw():
     clear_canvas()
+    image.clip_composite_draw(0, 0, 1200, 600, 0, '', 600, 300, 1200, 600)
     image.draw(600, 300)
     update_canvas()
 
