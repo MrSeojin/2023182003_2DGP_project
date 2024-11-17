@@ -1,6 +1,8 @@
 from pico2d import*
 
 import game_framework
+import game_world
+from effect import SmallEffect, BigEffect
 from state_machine import*
 
 # princess Run Speed
@@ -45,6 +47,9 @@ class Hit:
         princess.frame, princess.action = 0, 2
         princess.count = 0
 
+        effect = SmallEffect(princess.x, princess.y + 100)
+        game_world.add_object(effect, 3)
+
     @staticmethod
     def exit(princess, e):
         pass
@@ -64,6 +69,9 @@ class BigHit:
     def enter(princess, e):
         princess.frame, princess.action = 10, 2
         princess.count = 0
+
+        effect = BigEffect(princess.x, princess.y + 100)
+        game_world.add_object(effect, 3)
 
     @staticmethod
     def exit(princess, e):
@@ -215,7 +223,19 @@ class Princess:
         )
     def update(self):
         self.state_machine.update()
+
+    def get_bb(self):
+        return self.x - 100, self.y + 20, self.x - 10, self.y + 170
+
     def handle_event(self, event):
         self.state_machine.add_event(('INPUT', event))
+
     def draw(self):
         self.state_machine.draw()
+        #draw_rectangle(*self.get_bb())
+
+    def handle_collision(self, group, other):
+        if group == 'princess:mob':
+            pass
+        if group == 'princess:gold':
+            pass
