@@ -23,29 +23,37 @@ def handle_events():
 def init():
     global world
     global princess
-    global mob
     global background
+    global mobs
+    global floor
 
     background = Background()
     game_world.add_object(background, 0)
+
     princess = Princess()
     game_world.add_object(princess, 2)
-    mob = Mob()
-    game_world.add_object(mob, 2)
+
+    mobs = []
+    mobs.append(Mob())
+    game_world.add_objects(mobs, 2)
+
     floor = Floor(2000, 1200, 0)
     game_world.add_object(floor, 1)
     floor = Floor(800, 1200, random.randint(100, 400))
     game_world.add_object(floor, 1)
 
-    game_world.add_collision_pair('boy:ball', princess, None)
-    game_world.add_collision_pair('boy:gold', princess, None)
-    game_world.add_collision_pair('boy:ball', princess, None)
+    game_world.add_collision_pair('princess:mob', princess, None)
+    for mob in mobs:
+        game_world.add_collision_pair('princess:mob', None, mob)
+        game_world.add_collision_pair('mob:effect', mob, None)
+
 
 def finish():
     game_world.clear()
 
 def update():
     game_world.update()
+    game_world.handle_collisions()
 
 def draw():
     clear_canvas()

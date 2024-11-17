@@ -49,6 +49,7 @@ class Hit:
 
         effect = SmallEffect(princess.x, princess.y + 100)
         game_world.add_object(effect, 3)
+        game_world.add_collision_pair('mob:effect', None, effect)
 
     @staticmethod
     def exit(princess, e):
@@ -72,6 +73,7 @@ class BigHit:
 
         effect = BigEffect(princess.x, princess.y + 100)
         game_world.add_object(effect, 3)
+        game_world.add_collision_pair('mob:effect', None, effect)
 
     @staticmethod
     def exit(princess, e):
@@ -232,7 +234,7 @@ class Princess:
 
     def draw(self):
         self.state_machine.draw()
-        #draw_rectangle(*self.get_bb())
+        draw_rectangle(*self.get_bb())
 
     def handle_collision(self, group, other):
         if group == 'princess:mob':

@@ -2,6 +2,7 @@ from pico2d import*
 import random
 
 import game_framework
+import game_world
 from state_machine import*
 
 # mob Run Speed
@@ -27,7 +28,7 @@ class Idle:
 
     @staticmethod
     def do(mob):
-        mob.x -= RUN_SPEED_PPS * game_framework.frame_time
+        mob.x -= 2 * RUN_SPEED_PPS * game_framework.frame_time
         mob.frame += FRAMES_PER_ACTION * ACTION_PER_TIME*game_framework.frame_time
         if mob.x < 700 and mob.dir != 0:
             mob.state_machine.add_event(('TIME_OUT', 0))
@@ -105,7 +106,9 @@ class Hit:
 
     @staticmethod
     def do(mob):
-        mob.state_machine.add_event(('TIME_OUT', 0))
+        mob.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
+        if mob.frame >= 1:
+            mob.state_machine.add_event(('DEATH', 0))
 
     @staticmethod
     def draw(mob):
@@ -121,15 +124,16 @@ class Die:
 
     @staticmethod
     def exit(mob, e):
-        pass
+        game_world.remove_object(mob)
 
     @staticmethod
     def do(mob):
+        mob.x -= 2 * RUN_SPEED_PPS * game_framework.frame_time
         mob.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
         if mob.type == 0 and mob.frame >= 4:
-            mob.state_machine.add_event(('TIME_OUT', 0))
+            mob.state_machine.add_event(('DEATH', 0))
         elif mob.type !=0 and mob.frame >= 3:
-            mob.state_machine.add_event(('TIME_OUT', 0))
+            mob.state_machine.add_event(('DEATH', 0))
 
     @staticmethod
     def draw(mob):
@@ -158,17 +162,21 @@ class Mob:
         self.state_machine.start(Idle)
         self.state_machine.set_transitions(
             {
-                Idle : {time_out : Move},
-                Move : {time_out : Jump},
-                Jump : {time_out : Jump},
-                Hit : {time_out : Die},
-                Die : {time_out : Die}
+                Idle : {time_out : Move, hit_object: Hit},
+                Move : {time_out : Jump, hit_object: Hit},
+                Jump : {time_out : Jump, hit_object: Hit},
+                Hit : {death : Die, hit_object: Hit},
+                Die : {death : Die}
             }
         )
     def update(self):
         self.delay += 1
         if self.delay % 2:
             self.state_machine.update()
+
+        if self.hp <=0:
+            pass
+
     def handle_event(self, event):
         self.state_machine.add_event(('INPUT', event))
 
@@ -180,8 +188,12 @@ class Mob:
 
     def draw(self):
         self.state_machine.draw()
-        #draw_rectangle(*self.get_bb())
+        draw_rectangle(*self.get_bb())
 
     def handle_collision(self, group, other):
+        if group == 'mob:effect':
+            print('crush')
+            game_world.remove_collision_object(self)
+            self.state_machine.add_event(('HIT', 0))
         if group == 'princess:mob':
             pass

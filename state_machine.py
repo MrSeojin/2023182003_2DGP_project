@@ -13,6 +13,9 @@ def space_down(e):
 def c_down(e):
     return e[0] == 'INPUT' and e[1].type == SDL_KEYDOWN and e[1].key == SDLK_c
 
+def hit_object(e):
+    return e[0] == 'HIT'
+
 def death(e):
     return e[0] == 'DEATH'
 

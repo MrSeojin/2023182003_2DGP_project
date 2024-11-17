@@ -25,15 +25,20 @@ class Floor:
             game_world.remove_object(self)
 
         if 0 <= self.x - self.size <= RUN_SPEED_PPS * game_framework.frame_time:
-            now_size = random.randint(600, 1200)
+            now_size = random.randint(100, 1200)
             now_hole = random.randint(0, 400)
             floor = Floor(self.x - self.size, now_size, now_hole)
             game_world.add_object(floor, 1)
             mob = Mob(random.randint(self.size + 2000 - int(self.x), self.size + now_size + 2000 - int(self.x)))
-            game_world.add_object(mob, 2)
-            if 100 <= now_size or now_hole == 0:
+            if 500 <= now_size or now_hole == 0:
+                game_world.add_object(mob, 2)
+                game_world.add_collision_pair('princess:mob', None, mob)
+                game_world.add_collision_pair('mob:effect', mob, None)
+            if 800 <= now_size or now_hole == 0:
                 mob = Mob(random.randint(self.size + 2000 - int(self.x), self.size + now_size + 2000 - int(self.x)))
                 game_world.add_object(mob, 2)
+                game_world.add_collision_pair('princess:mob', None, mob)
+                game_world.add_collision_pair('mob:effect', mob, None)
 
     def draw(self):
         self.image.clip_draw(0, 0, self.size, 60, self.size / 2 + 2000 - int(self.x), 40)
