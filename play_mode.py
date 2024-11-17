@@ -1,6 +1,6 @@
 import game_framework
 from pico2d import *
-
+import random
 import game_world
 import title_mode
 from back_ground import Background
@@ -25,8 +25,6 @@ def init():
     global princess
     global mob
     global background
-    running = True
-    world = []
 
     background = Background()
     game_world.add_object(background, 0)
@@ -34,9 +32,14 @@ def init():
     game_world.add_object(princess, 2)
     mob = Mob()
     game_world.add_object(mob, 2)
-    floor = Floor()
+    floor = Floor(2000, 1200, 0)
+    game_world.add_object(floor, 1)
+    floor = Floor(800, 1200, random.randint(100, 400))
     game_world.add_object(floor, 1)
 
+    game_world.add_collision_pair('boy:ball', princess, None)
+    game_world.add_collision_pair('boy:gold', princess, None)
+    game_world.add_collision_pair('boy:ball', princess, None)
 
 def finish():
     game_world.clear()

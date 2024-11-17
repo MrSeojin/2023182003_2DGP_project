@@ -80,7 +80,7 @@ class BigHit:
     @staticmethod
     def do(princess):
         if princess.action == 2:
-            princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
+            princess.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
             if princess.frame >= 16:
                 princess.action = 0
                 princess.frame = 10
@@ -114,7 +114,7 @@ class Jump:
     def do(princess):
         if princess.action == 1:
             princess.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
-            if princess.frame <= 6:
+            if princess.frame <= 8:
                 princess.y += 3 * RUN_SPEED_PPS * game_framework.frame_time
             else:
                 princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
