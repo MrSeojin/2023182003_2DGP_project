@@ -5,7 +5,7 @@ import game_framework
 from state_machine import*
 
 # mob Run Speed
-PIXEL_PER_METER = (10.0 / 0.2)  # 10 pixel 30 cm
+PIXEL_PER_METER = (10.0 / 0.1)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -139,9 +139,9 @@ class Die:
             mob.image.clip_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, mob.x, mob.y)
 
 class Mob:
-    def __init__(self):
+    def __init__(self, x = 1250):
         self.delay = 0
-        self.x, self.y = 1250, 60
+        self.x, self.y = x, 60
         self.frame, self.action = 0, 0
         self.dir = random.randint(-1,1)
         self.type = random.randint(0, 2)
@@ -171,5 +171,17 @@ class Mob:
             self.state_machine.update()
     def handle_event(self, event):
         self.state_machine.add_event(('INPUT', event))
+
+    def get_bb(self):
+        if self.type == 0:
+            return self.x - 35, self.y, self.x + 35, self.y + 70
+        else:
+            return self.x - 32.5, self.y, self.x + 32.5, self.y + 65
+
     def draw(self):
         self.state_machine.draw()
+        #draw_rectangle(*self.get_bb())
+
+    def handle_collision(self, group, other):
+        if group == 'princess:mob':
+            pass

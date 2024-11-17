@@ -3,6 +3,7 @@ import game_framework
 import random
 
 import game_world
+from mob import Mob
 
 # princess Run Speed
 PIXEL_PER_METER = (500.0 / 5)  # 10 pixel 30 cm
@@ -24,8 +25,15 @@ class Floor:
             game_world.remove_object(self)
 
         if 0 <= self.x - self.size <= RUN_SPEED_PPS * game_framework.frame_time:
-            floor = Floor(self.x - self.size, random.randint(600, 1200), random.randint(100, 400))
+            now_size = random.randint(600, 1200)
+            now_hole = random.randint(0, 400)
+            floor = Floor(self.x - self.size, now_size, now_hole)
             game_world.add_object(floor, 1)
+            mob = Mob(random.randint(self.size + 2000 - int(self.x), self.size + now_size + 2000 - int(self.x)))
+            game_world.add_object(mob, 2)
+            if 100 <= now_size or now_hole == 0:
+                mob = Mob(random.randint(self.size + 2000 - int(self.x), self.size + now_size + 2000 - int(self.x)))
+                game_world.add_object(mob, 2)
 
     def draw(self):
         self.image.clip_draw(0, 0, self.size, 60, self.size / 2 + 2000 - int(self.x), 40)
