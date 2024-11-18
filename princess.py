@@ -125,7 +125,7 @@ class Jump:
                 princess.frame = 10
         else:
             princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
-            princess.y -= 2 * RUN_SPEED_PPS * game_framework.frame_time
+            princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
         if princess.y < 60:
                 princess.y = 60
         if princess.y == 60:
@@ -160,7 +160,7 @@ class DoubleJump:
                 princess.frame = 10
         else:
             princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
-            princess.y -= 2 * RUN_SPEED_PPS * game_framework.frame_time
+            princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
         if princess.y < 60:
             princess.y = 60
         if princess.y == 60:
