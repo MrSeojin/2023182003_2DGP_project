@@ -29,7 +29,7 @@ class Floor:
             now_hole = random.randint(0, 400)
             floor = Floor(self.x - self.size, now_size, now_hole)
             game_world.add_object(floor, 1)
-            mob = Mob(random.randint(self.size + 2000 - int(self.x), self.size + now_size + 2000 - int(self.x)))
+            mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x), self.size + now_hole + now_size + 2000 - int(self.x)))
             if 500 <= now_size or now_hole == 0:
                 game_world.add_object(mob, 2)
                 game_world.add_collision_pair('princess:mob', None, mob)
