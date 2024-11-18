@@ -12,11 +12,11 @@ RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 class SmallEffect:
 
     def __init__(self, x = 400, y = 300):
-        self.x, self.y, self.size = x, y, 0
+        self.x, self.y, self.size = x + 150, y, 18
         self.image = load_image('effect_snow.png')
 
     def get_bb(self):
-        return self.x - 10 * self.size, self.y - 20 * self.size, self.x + 10 * self.size, self.y + 20 * self.size
+        return self.x - 10 * self.size, 0, self.x + 10 * self.size, self.y + 20 * self.size
 
     def draw(self):
         self.image.clip_composite_draw(0, 0, 200, 181, 0, 'h', self.x, self.y, 20 * int(self.size), 10 * int(self.size))
@@ -25,10 +25,7 @@ class SmallEffect:
     def update(self):
         self.x += 5 * RUN_SPEED_PPS * game_framework.frame_time
 
-        if self.x >= 450:
-            self.size -= RUN_SPEED_PPS * game_framework.frame_time / 5
-        else:
-            self.size += RUN_SPEED_PPS * game_framework.frame_time / 5
+        self.size -= RUN_SPEED_PPS * game_framework.frame_time / 2
         if self.size < 0:
             self.size = 0
             game_world.remove_object(self)
@@ -40,15 +37,15 @@ class SmallEffect:
 
 class BigEffect:
     def __init__(self, x = 400, y = 300):
-        self.x, self.y, self.size = x, y, 0
+        self.x, self.y, self.size = x + 200, y, 20
         self.image = load_image('effect_snow.png')
 
     def get_bb(self):
-        return self.x - 10 * self.size, self.y - 20 * self.size, self.x + 10 * self.size, 600
+        return self.x - 10 * self.size, 0, self.x + 10 * self.size, 600
 
     def draw(self):
         self.image.clip_composite_draw(0, 0, 200, 181, 0, 'h', self.x, self.y, 20 * int(self.size), 10 * int(self.size))
-        #draw_rectangle(*self.get_bb())
+        draw_rectangle(*self.get_bb())
 
     def update(self):
         self.x += 5 * RUN_SPEED_PPS * game_framework.frame_time
@@ -57,10 +54,7 @@ class BigEffect:
         if self.y < 160:
             self.y = 160
 
-        if self.x >= 500:
-            self.size -= RUN_SPEED_PPS * game_framework.frame_time / 5
-        else:
-            self.size += RUN_SPEED_PPS * game_framework.frame_time / 5
+        self.size -= RUN_SPEED_PPS * game_framework.frame_time / 2
         if self.size < 0:
             self.size = 0
             game_world.remove_object(self)
