@@ -16,6 +16,9 @@ def c_down(e):
 def hit_object(e):
     return e[0] == 'HIT'
 
+def jump(e):
+    return e[0] == 'JUMP'
+
 def death(e):
     return e[0] == 'DEATH'
 

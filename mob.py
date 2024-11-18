@@ -31,7 +31,7 @@ class Idle:
         mob.x -= 2 * RUN_SPEED_PPS * game_framework.frame_time
         mob.frame += FRAMES_PER_ACTION * ACTION_PER_TIME*game_framework.frame_time
         if mob.x < 700 and mob.dir != 0:
-            mob.state_machine.add_event(('TIME_OUT', 0))
+            mob.state_machine.add_event(('JUMP', 0))
         elif mob.type == 0:
             mob.frame %= 3
         elif mob.type != 0:
@@ -56,7 +56,9 @@ class Move:
 
     @staticmethod
     def do(mob):
-        mob.x += 2 * mob.dir * RUN_SPEED_PPS * game_framework.frame_time
+        if mob.dir < 0:
+            mob.x += 2  * mob.dir * RUN_SPEED_PPS * game_framework.frame_time
+        mob.x += 2  * mob.dir * RUN_SPEED_PPS * game_framework.frame_time
         if mob.type == 0:
             mob.frame = (mob.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 7
         else:
@@ -78,15 +80,19 @@ class Move:
 class Jump:
     @staticmethod
     def enter(mob, e):
+        mob.y += 10
         mob.frame, mob.action = 0, 2
 
     @staticmethod
     def exit(mob, e):
-        pass
+        mob.y -= 10
 
     @staticmethod
     def do(mob):
-        mob.state_machine.add_event(('TIME_OUT', 0))
+        mob.x -= 2 * RUN_SPEED_PPS * game_framework.frame_time
+        mob.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
+        if mob.frame >= 1:
+            mob.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(mob):
@@ -162,9 +168,9 @@ class Mob:
         self.state_machine.start(Idle)
         self.state_machine.set_transitions(
             {
-                Idle : {time_out : Move, hit_object: Hit},
+                Idle : {time_out : Move, jump : Jump, hit_object: Hit},
                 Move : {time_out : Jump, hit_object: Hit},
-                Jump : {time_out : Jump, hit_object: Hit},
+                Jump : {time_out : Move, hit_object: Hit},
                 Hit : {death : Die, hit_object: Hit},
                 Die : {death : Die}
             }
