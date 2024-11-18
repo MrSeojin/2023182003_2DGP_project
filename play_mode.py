@@ -47,7 +47,6 @@ def init():
         game_world.add_collision_pair('princess:mob', None, mob)
         game_world.add_collision_pair('mob:effect', mob, None)
 
-
 def finish():
     game_world.clear()
 

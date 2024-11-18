@@ -192,7 +192,6 @@ class Mob:
 
     def handle_collision(self, group, other):
         if group == 'mob:effect':
-            print('crush')
             game_world.remove_collision_object(self)
             self.state_machine.add_event(('HIT', 0))
         if group == 'princess:mob':

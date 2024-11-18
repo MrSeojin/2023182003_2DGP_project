@@ -215,7 +215,7 @@ class Princess:
         self.state_machine.set_transitions(
             {
                 Run : {c_down : Hit, space_down : Jump, death : Die},
-                Hit : {time_out : Run, death : Die},
+                Hit : {time_out : Run, space_down : Jump, death : Die},
                 BigHit : {time_out : Run, fly_item : Fly, death : Die},
                 Jump : {c_down : BigHit, space_down : DoubleJump,  time_out : Run, fly_item : Fly, death : Die},
                 DoubleJump : {c_down : BigHit, time_out : Run, fly_item : Fly, death : Die},
@@ -238,6 +238,6 @@ class Princess:
 
     def handle_collision(self, group, other):
         if group == 'princess:mob':
-            pass
+            game_framework.quit()
         if group == 'princess:gold':
             pass

@@ -3,7 +3,6 @@ from pico2d import*
 
 import play_mode
 
-
 def init():
     global image
     image = load_image('title.png')
