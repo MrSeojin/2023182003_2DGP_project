@@ -34,8 +34,8 @@ def init():
     game_world.add_object(princess, 2)
 
     mobs = []
-    mobs.append(Mob())
-    game_world.add_objects(mobs, 2)
+    #mobs.append(Mob(random.randint(0,1200)))
+    #game_world.add_objects(mobs, 2)
 
     floor = Floor(2000, 1200, 0)
     game_world.add_object(floor, 1)
@@ -43,9 +43,9 @@ def init():
     game_world.add_object(floor, 1)
 
     game_world.add_collision_pair('princess:mob', princess, None)
-    for mob in mobs:
-        game_world.add_collision_pair('princess:mob', None, mob)
-        game_world.add_collision_pair('mob:effect', mob, None)
+    #for mob in mobs:
+    #    game_world.add_collision_pair('princess:mob', None, mob)
+    #    game_world.add_collision_pair('mob:effect', mob, None)
 
 def finish():
     game_world.clear()

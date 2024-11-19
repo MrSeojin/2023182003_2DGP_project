@@ -57,7 +57,7 @@ class Move:
     @staticmethod
     def do(mob):
         if mob.dir < 0:
-            mob.x += 2  * mob.dir * RUN_SPEED_PPS * game_framework.frame_time
+            mob.x += mob.dir * RUN_SPEED_PPS * game_framework.frame_time
         mob.x += 2  * mob.dir * RUN_SPEED_PPS * game_framework.frame_time
         if mob.type == 0:
             mob.frame = (mob.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 7
@@ -144,9 +144,9 @@ class Die:
     @staticmethod
     def draw(mob):
         if mob.type == 0:
-            mob.image.clip_draw(int(mob.frame) * 70, mob.action * 85, 70, 85, mob.x, mob.y)
+            mob.image.clip_draw(int(mob.frame) * 70, mob.action * 85, 70, 85, mob.x, mob.y + 40)
         else:
-            mob.image.clip_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, mob.x, mob.y)
+            mob.image.clip_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, mob.x, mob.y + 30)
 
 class Mob:
     def __init__(self, x = 1250):
