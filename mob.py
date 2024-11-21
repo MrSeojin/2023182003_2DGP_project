@@ -3,10 +3,11 @@ import random
 
 import game_framework
 import game_world
+from gold import Gold
 from state_machine import*
 
 # mob Run Speed
-PIXEL_PER_METER = (10.0 / 0.1)  # 10 pixel 30 cm
+PIXEL_PER_METER = (25.0 / 0.2)  # 10 pixel 30 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -104,6 +105,9 @@ class Jump:
 class Hit:
     @staticmethod
     def enter(mob, e):
+        if random.randint(0,1):
+            coin = Gold(mob.x + 180)
+            game_world.add_object(coin, 1)
         mob.frame, mob.action = 0, 3
 
     @staticmethod

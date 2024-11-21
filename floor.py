@@ -6,7 +6,7 @@ import game_world
 from mob import Mob
 
 # princess Run Speed
-PIXEL_PER_METER = (500.0 / 5)  # 10 pixel 30 cm
+PIXEL_PER_METER = (500.0 / 4.0)  # 10 pixel 10 cm
 RUN_SPEED_KMPH = 20.0  # Km / Hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
@@ -29,13 +29,13 @@ class Floor:
             now_hole = random.randint(0, 400)
             floor = Floor(self.x - self.size, now_size, now_hole)
             game_world.add_object(floor, 1)
-            mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x), self.size + now_hole + now_size + 2000 - int(self.x)))
             if 500 <= now_size or now_hole == 0:
+                mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x), self.size + now_hole + now_size + 2000 - int(self.x)))
                 game_world.add_object(mob, 2)
                 game_world.add_collision_pair('princess:mob', None, mob)
                 game_world.add_collision_pair('mob:effect', mob, None)
             if 800 <= now_size or now_hole == 0:
-                mob = Mob(random.randint(self.size + 2000 - int(self.x), self.size + now_size + 2000 - int(self.x)))
+                mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x), self.size + now_hole + now_size + 2000 - int(self.x)))
                 game_world.add_object(mob, 2)
                 game_world.add_collision_pair('princess:mob', None, mob)
                 game_world.add_collision_pair('mob:effect', mob, None)
