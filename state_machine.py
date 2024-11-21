@@ -22,6 +22,9 @@ def jump(e):
 def death(e):
     return e[0] == 'DEATH'
 
+def fall(e):
+    return e[0] == 'FALL'
+
 def fly_item(e):
     return e[0] == 'FLY_ITEM'
 

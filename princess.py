@@ -37,6 +37,7 @@ class Run:
             princess.y -= RUN_SPEED_PPS * game_framework.frame_time
         if princess.y < 60:
             princess.y = 60
+
     @staticmethod
     def draw(princess):
         princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
@@ -204,6 +205,26 @@ class Die:
     def draw(princess):
         princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
 
+class Fall:
+    @staticmethod
+    def enter(princess, e):
+        princess.action = 0
+
+    @staticmethod
+    def exit(princess, e):
+        pass
+
+    @staticmethod
+    def do(princess):
+        princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
+        princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+        if princess.y < 0:
+            princess.state_machine.add_event(('DEATH', 0))
+
+    @staticmethod
+    def draw(princess):
+        princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
+
 class Princess:
     def __init__(self):
         self.x, self.y = 300, 60
@@ -214,13 +235,13 @@ class Princess:
         self.state_machine.start(Run)
         self.state_machine.set_transitions(
             {
-                Run : {c_down : Hit, space_down : Jump, death : Die},
+                Run : {c_down : Hit, space_down : Jump, death : Die, fall : Fall},
                 Hit : {time_out : Run, space_down : Jump, death : Die},
-                BigHit : {time_out : Run, fly_item : Fly, death : Die},
-                Jump : {c_down : BigHit, space_down : DoubleJump,  time_out : Run, fly_item : Fly, death : Die},
-                DoubleJump : {c_down : BigHit, time_out : Run, fly_item : Fly, death : Die},
-                Fly : {time_out : Run}
-
+                BigHit : {time_out : Run, fly_item : Fly, death : Die, fall : Fall},
+                Jump : {c_down : BigHit, space_down : DoubleJump,  time_out : Run, fly_item : Fly, death : Die, fall : Fall},
+                DoubleJump : {c_down : BigHit, time_out : Run, fly_item : Fly, death : Die, fall : Fall},
+                Fly : {time_out : Run},
+                Fall : {death : Die}
             }
         )
     def update(self):
@@ -238,6 +259,6 @@ class Princess:
 
     def handle_collision(self, group, other):
         if group == 'princess:mob':
-            game_framework.quit()
+            self.state_machine.add_event(('FALL', 0))
         if group == 'princess:gold':
             pass
