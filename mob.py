@@ -33,6 +33,8 @@ class Idle:
         mob.frame += FRAMES_PER_ACTION * ACTION_PER_TIME*game_framework.frame_time
         if mob.x < 700 and mob.dir != 0:
             mob.state_machine.add_event(('JUMP', 0))
+        elif mob.fall:
+            mob.state_machine.add_event(('FALL', 0))
         elif mob.type == 0:
             mob.frame %= 3
         elif mob.type != 0:
@@ -64,6 +66,8 @@ class Move:
             mob.frame = (mob.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 7
         else:
             mob.frame = (mob.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 3
+        if mob.fall:
+            mob.state_machine.add_event(('FALL', 0))
 
     @staticmethod
     def draw(mob):
@@ -93,7 +97,10 @@ class Jump:
         mob.x -= 2 * RUN_SPEED_PPS * game_framework.frame_time
         mob.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
         if mob.frame >= 1:
-            mob.state_machine.add_event(('TIME_OUT', 0))
+            if mob.fall:
+                mob.state_machine.add_event(('FALL', 0))
+            else:
+                mob.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(mob):
@@ -117,15 +124,17 @@ class Hit:
     @staticmethod
     def do(mob):
         mob.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
-        if mob.frame >= 1:
+        if mob.frame >= 3:
             mob.state_machine.add_event(('DEATH', 0))
+        if mob.fall:
+            mob.state_machine.add_event(('FALL', 0))
 
     @staticmethod
     def draw(mob):
         if mob.type == 0:
-            mob.image.clip_draw(int(mob.frame) * 70, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
+            mob.image.clip_draw(0, mob.action * 85, 70, 85, mob.x, mob.y + 85 / 2)
         else:
-            mob.image.clip_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
+            mob.image.clip_draw(0, mob.action * 65, 65, 65, mob.x, mob.y + 65 / 2)
 
 class Die:
     @staticmethod
@@ -152,6 +161,42 @@ class Die:
         else:
             mob.image.clip_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, mob.x, mob.y + 30)
 
+class Fall:
+    @staticmethod
+    def enter(mob, e):
+        if mob.action == 2:
+            mob.action = 1
+
+    @staticmethod
+    def exit(mob, e):
+        pass
+
+    @staticmethod
+    def do(mob):
+        if mob.dir < 0:
+            mob.x += mob.dir * RUN_SPEED_PPS * game_framework.frame_time
+        mob.frame = FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
+        mob.y -= RUN_SPEED_PPS * game_framework.frame_time
+        if mob.action == 0:
+            if mob.type == 0:
+                mob.frame %= 3
+            elif mob.type != 0:
+                mob.frame %= 2
+        elif mob.action == 1:
+            if mob.type == 0:
+                mob.frame %= 7
+            elif mob.type != 0:
+                mob.frame %= 3
+        else:
+            mob.frame = 0
+
+    @staticmethod
+    def draw(mob):
+        if mob.type == 0:
+            mob.image.clip_draw(int(mob.frame) * 70, mob.action * 85, 70, 85, mob.x, mob.y + 40)
+        else:
+            mob.image.clip_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, mob.x, mob.y + 30)
+
 class Mob:
     def __init__(self, x = 1250):
         self.delay = 0
@@ -159,6 +204,7 @@ class Mob:
         self.frame, self.action = 0, 0
         self.dir = random.randint(-1,1)
         self.type = random.randint(0, 2)
+        self.fall = False
         if self.type == 0:
             self.image = load_image('mob_slime_animation_sheet.png')
             self.hp = 150
@@ -172,10 +218,11 @@ class Mob:
         self.state_machine.start(Idle)
         self.state_machine.set_transitions(
             {
-                Idle : {time_out : Move, jump : Jump, hit_object: Hit},
-                Move : {time_out : Jump, hit_object: Hit},
-                Jump : {time_out : Move, hit_object: Hit},
-                Hit : {death : Die, hit_object: Hit},
+                Idle : {time_out : Move, jump : Jump, hit_object: Hit, fall : Fall},
+                Move : {time_out : Jump, hit_object: Hit, fall : Fall},
+                Jump : {time_out : Move, hit_object: Hit, fall : Fall},
+                Hit : {death : Die, hit_object: Hit, fall : Fall},
+                Fall : {death : Die},
                 Die : {death : Die}
             }
         )
@@ -186,6 +233,7 @@ class Mob:
 
         if self.hp <=0:
             pass
+        self.fall = True
 
     def handle_event(self, event):
         self.state_machine.add_event(('INPUT', event))
@@ -207,4 +255,4 @@ class Mob:
         if group == 'princess:mob':
             pass
         if group == 'mob:floor':
-            pass
+            self.fall = False
