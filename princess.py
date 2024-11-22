@@ -259,6 +259,7 @@ class Princess:
 
     def handle_collision(self, group, other):
         if group == 'princess:mob':
-            self.state_machine.add_event(('FALL', 0))
+            pass
         if group == 'princess:gold':
             pass
+            #self.state_machine.add_event(('FALL', 0))

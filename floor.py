@@ -40,8 +40,12 @@ class Floor:
                 game_world.add_collision_pair('princess:mob', None, mob)
                 game_world.add_collision_pair('mob:effect', mob, None)
 
+    def get_bb(self):
+        return 2000 - int(self.x), 40, self.size + 2000 - int(self.x), 80
+
     def draw(self):
         self.image.clip_draw(0, 0, self.size, 60, self.size / 2 + 2000 - int(self.x), 40)
+        draw_rectangle(*self.get_bb())
 
     def handle_collision(self, group, other):
         pass
