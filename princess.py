@@ -38,6 +38,9 @@ class Run:
         if princess.y < 60:
             princess.y = 60
 
+        if princess.fall:
+           princess.state_machine.add_event(('FALL', 0))
+
     @staticmethod
     def draw(princess):
         princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
@@ -82,19 +85,27 @@ class BigHit:
 
     @staticmethod
     def do(princess):
-        if princess.action == 2:
-            princess.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
-            if princess.frame >= 16:
-                princess.action = 0
-                princess.frame = 10
-            princess.y -= RUN_SPEED_PPS * game_framework.frame_time
-        else:
-            princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
-            princess.y -= 2 * RUN_SPEED_PPS * game_framework.frame_time
-        if princess.y < 60:
+        princess.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
+        if princess.frame >= 16:
+            princess.frame = 10
+            if 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time <= princess.y <= 60:
+                princess.y = 60
+            if princess.y < 60:
+                princess.state_machine.add_event(('FALL', 0))
+            else:
+                princess.jump_num = 0
+                princess.state_machine.add_event(('TIME_OUT', 0))
+        princess.y -= RUN_SPEED_PPS * game_framework.frame_time
+
+        if 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time <= princess.y <= 60:
             princess.y = 60
-        if princess.y == 60:
-            princess.state_machine.add_event(('TIME_OUT', 0))
+        if princess.y <= 60:
+            if princess.y < 60:
+                princess.state_machine.add_event(('FALL', 0))
+            else:
+                princess.jump_num = 0
+                princess.state_machine.add_event(('TIME_OUT', 0))
+
 
     @staticmethod
     def draw(princess):
@@ -108,6 +119,7 @@ class Jump:
             princess.frame = 6
         else:
             princess.frame = 0
+        princess.jump_num += 1
 
     @staticmethod
     def exit(princess, e):
@@ -115,22 +127,44 @@ class Jump:
 
     @staticmethod
     def do(princess):
+        if princess.jump_num > 2:
+            if princess.y < 60:
+                princess.state_machine.add_event(('FALL', 0))
+            else:
+                princess.state_machine.add_event(('TIME_OUT', 0))
+
         if princess.action == 1:
             princess.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
             if princess.frame <= 8:
                 princess.y += 3 * RUN_SPEED_PPS * game_framework.frame_time
             else:
                 princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+
+                if princess.action != 3 and 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time <= princess.y <= 60:
+                    princess.y = 60
+                if princess.action != 3 and princess.y <= 60:
+                    if princess.fall or princess.y < 60:
+                        princess.state_machine.add_event(('FALL', 0))
+                    else:
+                        princess.jump_num = 0
+                        princess.state_machine.add_event(('TIME_OUT', 0))
             if princess.frame >= 12:
                 princess.action = 0
                 princess.frame = 10
         else:
             princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
             princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
-        if princess.y < 60:
+
+            if princess.action != 3 and 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time <= princess.y <= 60:
                 princess.y = 60
-        if princess.y == 60:
-            princess.state_machine.add_event(('TIME_OUT', 0))
+            if princess.action != 3 and princess.y <= 60:
+                if princess.fall or princess.y < 60:
+                    princess.state_machine.add_event(('FALL', 0))
+                else:
+                    princess.jump_num = 0
+                    princess.state_machine.add_event(('TIME_OUT', 0))
+
+
 
     @staticmethod
     def draw(princess):
@@ -139,7 +173,11 @@ class Jump:
 class DoubleJump:
     @staticmethod
     def enter(princess, e):
-        princess.frame, princess.action = 0, 3
+        if time_out(e):
+            princess.frame, princess.action = 0, 1
+        else:
+            princess.frame, princess.action = 0, 3
+            princess.jump_num += 1
 
     @staticmethod
     def exit(princess, e):
@@ -147,6 +185,12 @@ class DoubleJump:
 
     @staticmethod
     def do(princess):
+        if princess.jump_num > 2:
+            if princess.y < 60:
+                princess.state_machine.add_event(('FALL', 0))
+            else:
+                princess.state_machine.add_event(('TIME_OUT', 0))
+
         if princess.action == 3:
             princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
             princess.y += 3 * RUN_SPEED_PPS * game_framework.frame_time
@@ -156,16 +200,31 @@ class DoubleJump:
         elif princess.action == 1:
             princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
             princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+
+            if princess.action != 3 and 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time <= princess.y <= 60:
+                princess.y = 60
+            if princess.action != 3 and princess.y <= 60:
+                if princess.fall or princess.y < 60:
+                    princess.state_machine.add_event(('FALL', 0))
+                else:
+                    princess.jump_num = 0
+                    princess.state_machine.add_event(('TIME_OUT', 0))
+
             if princess.frame >= 12:
                 princess.action = 0
                 princess.frame = 10
         else:
             princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
             princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
-        if princess.y < 60:
-            princess.y = 60
-        if princess.y == 60:
-            princess.state_machine.add_event(('TIME_OUT', 0))
+
+            if princess.action != 3 and 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time <= princess.y <= 60:
+                princess.y = 60
+            if princess.action != 3 and princess.y <= 60:
+                if princess.fall or princess.y < 60:
+                    princess.state_machine.add_event(('FALL', 0))
+                else:
+                    princess.jump_num = 0
+                    princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
@@ -217,8 +276,8 @@ class Fall:
     @staticmethod
     def do(princess):
         princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
-        princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
-        if princess.y < 0:
+        princess.y -= RUN_SPEED_PPS * game_framework.frame_time
+        if princess.y < -300:
             princess.state_machine.add_event(('DEATH', 0))
 
     @staticmethod
@@ -228,6 +287,8 @@ class Fall:
 class Princess:
     def __init__(self):
         self.x, self.y = 300, 60
+        self.fall = False
+        self.jump_num = 0
 
         self.frame, self.action = 0, 0
         self.image = load_image('princess_snow_animation_sheet.png')
@@ -237,15 +298,17 @@ class Princess:
             {
                 Run : {c_down : Hit, space_down : Jump, death : Die, fall : Fall},
                 Hit : {time_out : Run, space_down : Jump, death : Die},
-                BigHit : {time_out : Run, fly_item : Fly, death : Die, fall : Fall},
+                BigHit : {time_out : DoubleJump, fly_item : Fly, death : Die, fall : Fall, space_down : Jump},
                 Jump : {c_down : BigHit, space_down : DoubleJump,  time_out : Run, fly_item : Fly, death : Die, fall : Fall},
                 DoubleJump : {c_down : BigHit, time_out : Run, fly_item : Fly, death : Die, fall : Fall},
-                Fly : {time_out : Run},
-                Fall : {death : Die}
+                Fly : {time_out : Run, space_down : Jump},
+                Fall : {death : Die, space_down : Jump},
+                Die : {}
             }
         )
     def update(self):
         self.state_machine.update()
+        self.fall = True
 
     def get_bb(self):
         return self.x - 100, self.y + 20, self.x - 10, self.y + 170
@@ -258,8 +321,9 @@ class Princess:
         draw_rectangle(*self.get_bb())
 
     def handle_collision(self, group, other):
+        if group == 'princess:floor':
+            self.fall = False
         if group == 'princess:mob':
             pass
         if group == 'princess:gold':
             pass
-            #self.state_machine.add_event(('FALL', 0))
