@@ -241,6 +241,7 @@ class Fly:
 
     @staticmethod
     def do(princess):
+        princess.state_machine.add_event(('FLY', 0))
         pass
 
     @staticmethod
@@ -250,15 +251,18 @@ class Fly:
 class Die:
     @staticmethod
     def enter(princess, e):
-        pass
+        princess.action, princess.frame = 3, 10
+        princess.y = 60
 
     @staticmethod
     def exit(princess, e):
-        pass
+        game_world.remove_object(princess)
 
     @staticmethod
     def do(princess):
-        pass
+        princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time / 3
+        if princess.frame >= 16:
+            pass
 
     @staticmethod
     def draw(princess):
@@ -324,6 +328,10 @@ class Princess:
         if group == 'princess:floor':
             self.fall = False
         if group == 'princess:mob':
-            pass
+            self.state_machine.add_event(('DEATH', 0))
         if group == 'princess:gold':
+            pass
+        if group == 'princess:fly_item':
+            self.state_machine.add_event(('FLY', 0))
+        if group == 'princess:double_item':
             pass
