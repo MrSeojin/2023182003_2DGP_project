@@ -97,10 +97,7 @@ class Jump:
         mob.x -= 2 * RUN_SPEED_PPS * game_framework.frame_time
         mob.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
         if mob.frame >= 1:
-            if mob.fall:
-                mob.state_machine.add_event(('FALL', 0))
-            else:
-                mob.state_machine.add_event(('TIME_OUT', 0))
+            mob.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(mob):
@@ -123,11 +120,12 @@ class Hit:
 
     @staticmethod
     def do(mob):
-        mob.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
-        if mob.frame >= 3:
+        mob.frame += FRAMES_PER_ACTION*ACTION_PER_TIME * game_framework.frame_time
+        mob.x -= 2 * RUN_SPEED_PPS * game_framework.frame_time
+        if mob.frame >= 1:
             mob.state_machine.add_event(('DEATH', 0))
-        if mob.fall:
-            mob.state_machine.add_event(('FALL', 0))
+            if mob.fall:
+                mob.state_machine.add_event(('FALL', 0))
 
     @staticmethod
     def draw(mob):

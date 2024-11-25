@@ -21,7 +21,7 @@ class Floor:
     def update(self):
         self.x += RUN_SPEED_PPS * game_framework.frame_time
 
-        if int(self.x) > self.size + 2000:
+        if self.x > self.size + 2000:
             game_world.remove_object(self)
 
         if 0 <= self.x - self.size <= RUN_SPEED_PPS * game_framework.frame_time:

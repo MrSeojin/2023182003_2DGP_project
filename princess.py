@@ -252,7 +252,6 @@ class Die:
     @staticmethod
     def enter(princess, e):
         princess.action, princess.frame = 3, 10
-        princess.y = 60
 
     @staticmethod
     def exit(princess, e):
@@ -260,9 +259,13 @@ class Die:
 
     @staticmethod
     def do(princess):
-        princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time / 3
+        princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME * game_framework.frame_time / 3
+        if princess.y > 60:
+            princess.y -= RUN_SPEED_PPS * game_framework.frame_time
+        if 60 - RUN_SPEED_PPS * game_framework.frame_time < princess.y < 60:
+            princess.y = 60
         if princess.frame >= 16:
-            pass
+            princess.state_machine.add_event(('DEATH', 0))
 
     @staticmethod
     def draw(princess):
