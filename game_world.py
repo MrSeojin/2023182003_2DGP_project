@@ -19,8 +19,12 @@ def render():
             o.draw()
 
 def clear():
+    for pairs in collision_pairs.values():
+        pairs[0].clear()
+        pairs[1].clear()
     for layer in world:
         layer.clear()
+    collision_pairs.clear()
 
 def remove_collision_object(o):
     for pairs in collision_pairs.values():

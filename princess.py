@@ -133,7 +133,7 @@ class Jump:
     @staticmethod
     def do(princess):
         if princess.jump_num > 2:
-            if princess.y >= 60:
+            if princess.y >= 60 or princess.fall == False:
                 princess.state_machine.add_event(('TIME_OUT', 0))
             else:
                 princess.state_machine.add_event(('FALL', 0))
@@ -191,7 +191,7 @@ class DoubleJump:
     @staticmethod
     def do(princess):
         if princess.jump_num > 2:
-            if princess.y >= 60:
+            if princess.y >= 60 or princess.fall == False:
                 princess.state_machine.add_event(('TIME_OUT', 0))
             else:
                 princess.state_machine.add_event(('FALL', 0))
