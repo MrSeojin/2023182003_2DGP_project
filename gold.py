@@ -1,6 +1,7 @@
 from pico2d import*
 
 import game_framework
+import game_world
 
 # princess Run Speed
 PIXEL_PER_METER = (35.0 / 0.2)  # 10 pixel 10 cm
@@ -32,4 +33,4 @@ class Gold:
 
     def handle_collision(self, group, other):
         if group == 'princess:gold':
-            pass
+            game_world.remove_object(self)

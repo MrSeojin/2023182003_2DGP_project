@@ -53,7 +53,10 @@ def init():
     game_world.add_collision_pair('mob:floor', None, floor)
 
     game_world.add_collision_pair('princess:mob', princess, None)
+    game_world.add_collision_pair('princess:gold', princess, None)
     game_world.add_collision_pair('princess:floor', princess, None)
+    game_world.add_collision_pair('princess:fly_item', princess, None)
+    game_world.add_collision_pair('princess:double_item', princess, None)
 
 def finish():
     game_world.clear()
