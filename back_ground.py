@@ -1,6 +1,8 @@
 from pico2d import load_image
 
 import game_framework
+import game_world
+from prince import Prince
 
 # princess Run Speed
 PIXEL_PER_METER = (100.0 / 20)  # 10 pixel 30 cm
@@ -27,4 +29,16 @@ class Background:
         else:
             self.image.clip_draw(int(self.x), 0, 1200, 600, 600, 300)
 
+class Fever:
+    def __init__(self):
+        self.image = load_image('map_background_fever.png')
+        prince = Prince()
+        game_world.add_object(prince, 2)
+        game_world.add_collision_pair('prince:effect', prince, None)
+
+    def update(self):
+        pass
+
+    def draw(self):
+        self.image.clip_draw(0, 0, 1200, 600, 600, 300)
 
