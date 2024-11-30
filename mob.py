@@ -109,9 +109,9 @@ class Jump:
 class Hit:
     @staticmethod
     def enter(mob, e):
-        if random.randint(0,1):
-            coin = Gold(mob.x + 270)
-            game_world.add_object(coin, 1)
+        coin = Gold(mob.x + 100)
+        game_world.add_object(coin, 1)
+        game_world.add_collision_pair('princess:gold', None, coin)
         mob.frame, mob.action = 0, 3
 
     @staticmethod
@@ -121,11 +121,12 @@ class Hit:
     @staticmethod
     def do(mob):
         mob.frame += FRAMES_PER_ACTION*ACTION_PER_TIME * game_framework.frame_time
-        mob.x -= 2 * RUN_SPEED_PPS * game_framework.frame_time
-        if mob.frame >= 1:
-            mob.state_machine.add_event(('DEATH', 0))
+
+        if mob.frame > 1:
             if mob.fall:
                 mob.state_machine.add_event(('FALL', 0))
+            else:
+                mob.state_machine.add_event(('DEATH', 0))
 
     @staticmethod
     def draw(mob):
@@ -247,10 +248,11 @@ class Mob:
         draw_rectangle(*self.get_bb())
 
     def handle_collision(self, group, other):
-        if group == 'mob:effect':
-            game_world.remove_collision_object(self)
-            self.state_machine.add_event(('HIT', 0))
         if group == 'princess:mob':
             pass
+        if group == 'mob:effect':
+            game_world.remove_collision_object(self)
+            game_world.add_collision_pair('mob:floor', self, None)
+            self.state_machine.add_event(('HIT', 0))
         if group == 'mob:floor':
             self.fall = False
