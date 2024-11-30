@@ -28,7 +28,7 @@ class Gold:
 
     def draw(self):
         self.image.clip_draw(self.frame * 25, self.action * 25, 25, 25, self.x, self.y)
-        #draw_rectangle(*self.get_bb())
+        draw_rectangle(*self.get_bb())
 
     def handle_collision(self, group, other):
         if group == 'princess:gold':

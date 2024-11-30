@@ -3,8 +3,9 @@ from pico2d import *
 import random
 import game_world
 import title_mode
-from back_ground import Background
+from back_ground import Background, Fever
 from floor import Floor
+from prince import Prince
 from princess import Princess
 from mob import Mob
 
@@ -26,6 +27,11 @@ def init():
     global background
     global mobs
     global floor
+    global fever_time
+    global score
+
+    fever_time = False
+    score = 0
 
     background = Background()
     game_world.add_object(background, 0)

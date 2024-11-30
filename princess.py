@@ -2,6 +2,7 @@ from pico2d import*
 
 import game_framework
 import game_world
+import play_mode
 from effect import SmallEffect, BigEffect
 from state_machine import*
 
@@ -55,6 +56,7 @@ class Hit:
         effect = SmallEffect(princess.x, princess.y + 100)
         game_world.add_object(effect, 3)
         game_world.add_collision_pair('mob:effect', None, effect)
+        game_world.add_collision_pair('prince:effect', None, effect)
 
 
     @staticmethod
@@ -84,6 +86,7 @@ class BigHit:
         effect = BigEffect(princess.x, princess.y + 100)
         game_world.add_object(effect, 3)
         game_world.add_collision_pair('mob:effect', None, effect)
+        game_world.add_collision_pair('prince:effect', None, effect)
 
     @staticmethod
     def exit(princess, e):
@@ -335,7 +338,7 @@ class Princess:
         if group == 'princess:mob':
             self.state_machine.add_event(('DEATH', 0))
         if group == 'princess:gold':
-            pass
+            play_mode.score += 1
         if group == 'princess:fly_item':
             self.state_machine.add_event(('FLY', 0))
         if group == 'princess:double_item':
