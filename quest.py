@@ -11,7 +11,7 @@ class Quest:
     def __init__(self):
         self.font = load_font('ENCR10B.TTF', 35)
         self.num = 0
-        self.type = 1
+        self.type = 2
         #self.type = random.randint(1,3)
         if self.type == 0:
             self.goalNum = 0
@@ -20,7 +20,7 @@ class Quest:
             self.goalNum = random.randint(10, 15)
             self.quest_story = f'jump   {self.goalNum}'
         elif self.type == 2:
-            self.goalNum = random.randint()
+            self.goalNum = random.randint(5, 10)
             self.quest_story = f'double jump    {self.goalNum}'
         elif self.type == 3:
             self.goalNum = random.randint()

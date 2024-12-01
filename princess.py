@@ -188,7 +188,8 @@ class DoubleJump:
         if time_out(e):
             princess.frame, princess.action = 0, 1
         else:
-
+            if play_mode.quest.type == 2:
+                play_mode.quest.num += 1
             princess.frame, princess.action = 0, 3
             princess.jump_num += 1
 

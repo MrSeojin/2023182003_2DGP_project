@@ -41,13 +41,13 @@ class Fever:
     def update(self):
         self.time_count += game_framework.frame_time
         if self.time_count > 10:
-            play_mode.quest.type = 1
+            play_mode.quest.type = 2
             #play_mode.quest.type = random.randint(1,3)
             if play_mode.quest.type == 1:
                 play_mode.quest.goalNum = random.randint(10, 15)
                 play_mode.quest.quest_story = f'jump   {play_mode.quest.goalNum}'
             elif play_mode.quest.type == 2:
-                play_mode.quest.goalNum = random.randint(10, 15)
+                play_mode.quest.goalNum = random.randint(5, 10)
                 play_mode.quest.quest_story = f'double jump    {play_mode.quest.goalNum}'
             elif play_mode.quest.type == 3:
                 play_mode.quest.goalNum = random.randint()
