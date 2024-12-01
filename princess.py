@@ -265,8 +265,9 @@ class Fly:
             princess.x += RUN_SPEED_PPS * game_framework.frame_time
             if princess.y >= 300:
                 princess.action = 6
-                fever = Fever()
-                game_world.add_object(fever, 3)
+                if play_mode.fever_time:
+                    fever = Fever()
+                    game_world.add_object(fever, 3)
         elif princess.action == 6:
             princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
             princess.x += 5 * RUN_SPEED_PPS * game_framework.frame_time
@@ -348,13 +349,13 @@ class Princess:
         self.state_machine.start(Run)
         self.state_machine.set_transitions(
             {
-                Run : {c_down : Hit, space_down : Jump, death : Die, fall : Fall},
-                Hit : {time_out : Run, space_down : Jump, death : Die},
+                Run : {c_down : Hit, space_down : Jump, death : Die, fall : Fall,fly_item : Fly,},
+                Hit : {time_out : Run, space_down : Jump, death : Die,fly_item : Fly,},
                 BigHit : {time_out : DoubleJump, fly_item : Fly, death : Die, fall : Fall, space_down : Jump},
                 Jump : {c_down : BigHit, space_down : DoubleJump,  time_out : Run, fly_item : Fly, death : Die, fall : Fall},
                 DoubleJump : {c_down : BigHit, time_out : Run, fly_item : Fly, death : Die, fall : Fall},
-                Fly : {time_out : Run},
-                Fall : {death : Die, space_down : Jump},
+                Fly : {time_out : Run, fly_item : Fly,},
+                Fall : {death : Die, space_down : Jump, fly_item : Fly,},
                 Die : {time_out : Die}
             }
         )
@@ -380,6 +381,6 @@ class Princess:
         if group == 'princess:gold':
             play_mode.score += 1
         if group == 'princess:fly_item':
-            self.state_machine.add_event(('FLY', 0))
+            self.state_machine.add_event(('FLY_ITEM', 0))
         if group == 'princess:double_item':
             pass

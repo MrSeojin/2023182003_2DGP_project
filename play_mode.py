@@ -3,11 +3,9 @@ from pico2d import *
 import random
 import game_world
 import title_mode
-from back_ground import Background, Fever
+from back_ground import Background
 from floor import Floor
-from prince import Prince
 from princess import Princess
-from mob import Mob
 from quest import Quest
 
 
