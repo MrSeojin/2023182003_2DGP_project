@@ -22,8 +22,12 @@ class Floor:
     def update(self):
         if play_mode.princess.action >= 5:
             self.x += 2 * RUN_SPEED_PPS * game_framework.frame_time
+            play_mode.score += RUN_SPEED_PPS * game_framework.frame_time / 100
         else:
             self.x += RUN_SPEED_PPS * game_framework.frame_time
+            play_mode.score += RUN_SPEED_PPS * game_framework.frame_time / 200
+            if play_mode.quest.type == 4:
+                play_mode.quest.num += RUN_SPEED_PPS * game_framework.frame_time / 200
 
         if self.x > self.size + 2000:
             game_world.remove_object(self)
