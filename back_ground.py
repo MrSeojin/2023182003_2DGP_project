@@ -42,8 +42,7 @@ class Fever:
     def update(self):
         self.time_count += game_framework.frame_time
         if self.time_count > 10:
-            play_mode.quest.type = 3
-            #play_mode.quest.type = random.randint(1,3)
+            play_mode.quest.type = random.randint(1,4)
             if play_mode.quest.type == 1:
                 play_mode.quest.goalNum = random.randint(10, 15)
                 play_mode.quest.quest_story = f'jump   {play_mode.quest.goalNum}'
@@ -54,13 +53,13 @@ class Fever:
                 play_mode.quest.goalNum = random.randint(15, 20)
                 play_mode.quest.quest_story = f'mob    {play_mode.quest.goalNum}'
             elif play_mode.quest.type == 4:
-                play_mode.quest.goalNum = random.randint()
+                play_mode.quest.goalNum = random.randint(200,350)
                 play_mode.quest.quest_story = f'run    {play_mode.quest.goalNum}'
             play_mode.fever_time = False
             game_world.remove_object(self)
 
     def draw(self):
         self.image.clip_draw(0, 0, 1200, 600, 600, 300)
-        if play_mode.princess.action >= 5:
+        if play_mode.princess.action >= 5 and play_mode.fever_time:
             self.logo_image.clip_draw(0, 0, 600, 300, 600, 300)
 

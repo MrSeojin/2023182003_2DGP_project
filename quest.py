@@ -11,8 +11,7 @@ class Quest:
     def __init__(self):
         self.font = load_font('ENCR10B.TTF', 35)
         self.num = 0
-        self.type = 1
-        #self.type = random.randint(1,3)
+        self.type = random.randint(1,4)
         if self.type == 0:
             self.goalNum = 0
             self.quest_story = None
@@ -26,7 +25,7 @@ class Quest:
             self.goalNum = random.randint(10, 15)
             self.quest_story = f'mob    {self.goalNum}'
         elif self.type == 4:
-            self.goalNum = random.randint()
+            self.goalNum = random.randint(200, 350)
             self.quest_story = f'run    {self.goalNum}'
 
 
@@ -34,10 +33,11 @@ class Quest:
 
     def draw(self):
         if self.type > 0:
-            self.font.draw(400, 30, self.quest_story + f' : {self.num}', (5, 5, 5))
+            self.font.draw(400, 30, self.quest_story + f' : {int(self.num)}', (5, 5, 5))
+        self.font.draw(500, 550, f'score {int(play_mode.score)}', (0, 0, 0))
 
     def update(self):
-        if self.goalNum == self.num and self.type!=0:
+        if self.goalNum <= self.num and self.type!=0:
             self.num = 0
             self.type = 0
             play_mode.fever_time = True
