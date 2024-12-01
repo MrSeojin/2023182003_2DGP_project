@@ -4,6 +4,7 @@ import random
 import game_framework
 import game_world
 from gold import Gold
+from item import FlyItem
 from state_machine import*
 
 # mob Run Speed
@@ -109,9 +110,14 @@ class Jump:
 class Hit:
     @staticmethod
     def enter(mob, e):
-        coin = Gold(mob.x + 100)
-        game_world.add_object(coin, 1)
-        game_world.add_collision_pair('princess:gold', None, coin)
+        if random.randint(0,10) == 1:
+            item = FlyItem()
+            game_world.add_object(item, 1)
+            game_world.add_collision_pair('princess:fly_item', None, item)
+        else:
+            coin = Gold(mob.x + 100)
+            game_world.add_object(coin, 1)
+            game_world.add_collision_pair('princess:gold', None, coin)
         mob.frame, mob.action = 0, 3
 
     @staticmethod
