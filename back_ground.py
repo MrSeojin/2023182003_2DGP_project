@@ -36,12 +36,13 @@ class Background:
 class Fever:
     def __init__(self):
         self.image = load_image('map_background_fever.png')
+        self.logo_image = load_image('kick_the_prince.png')
         self.time_count = 0
 
     def update(self):
         self.time_count += game_framework.frame_time
         if self.time_count > 10:
-            play_mode.quest.type = 2
+            play_mode.quest.type = 3
             #play_mode.quest.type = random.randint(1,3)
             if play_mode.quest.type == 1:
                 play_mode.quest.goalNum = random.randint(10, 15)
@@ -50,7 +51,7 @@ class Fever:
                 play_mode.quest.goalNum = random.randint(5, 10)
                 play_mode.quest.quest_story = f'double jump    {play_mode.quest.goalNum}'
             elif play_mode.quest.type == 3:
-                play_mode.quest.goalNum = random.randint()
+                play_mode.quest.goalNum = random.randint(15, 20)
                 play_mode.quest.quest_story = f'mob    {play_mode.quest.goalNum}'
             elif play_mode.quest.type == 4:
                 play_mode.quest.goalNum = random.randint()
@@ -60,4 +61,6 @@ class Fever:
 
     def draw(self):
         self.image.clip_draw(0, 0, 1200, 600, 600, 300)
+        if play_mode.princess.action >= 5:
+            self.logo_image.clip_draw(0, 0, 600, 300, 600, 300)
 

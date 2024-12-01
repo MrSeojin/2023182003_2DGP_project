@@ -1,9 +1,7 @@
 from pico2d import*
 import game_framework
-import random
 
 import game_world
-from mob import Mob
 
 # princess Run Speed
 PIXEL_PER_METER = (700.0 / 4.0)  # 10 pixel 10 cm

@@ -250,6 +250,9 @@ class Fly:
     def enter(princess, e):
         princess.action = 5
         princess.frame = 0
+        if play_mode.fever_time:
+
+            pass
 
     @staticmethod
     def exit(princess, e):
@@ -262,6 +265,8 @@ class Fly:
             princess.x += RUN_SPEED_PPS * game_framework.frame_time
             if princess.y >= 300:
                 princess.action = 6
+                fever = Fever()
+                game_world.add_object(fever, 3)
         elif princess.action == 6:
             princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
             princess.x += 5 * RUN_SPEED_PPS * game_framework.frame_time
@@ -269,8 +274,6 @@ class Fly:
                 princess.x = 500
             if princess.frame >= 80:
                 princess.action = 0
-                fever = Fever()
-                game_world.add_object(fever, 3)
         elif princess.action == 0:
             princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
             princess.x -= 5 * RUN_SPEED_PPS * game_framework.frame_time
@@ -278,17 +281,19 @@ class Fly:
                 princess.x = 300
             if princess.y <= 60:
                 princess.y = 60
-            if play_mode.fever_time and princess.y == 60:
+            if princess.y == 60:
                 princess.x = 300
-                prince = Prince()
-                game_world.add_object(prince, 2)
-                game_world.add_collision_pair('prince:effect', prince, None)
+                if play_mode.fever_time:
+                    prince = Prince()
+                    game_world.add_object(prince, 2)
+                    game_world.add_collision_pair('prince:effect', prince, None)
                 princess.jump_num = 0
                 princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
         princess.fly_image.clip_draw(0, 0, 374, 381, int(princess.x), int(princess.y) + 135)
+
 
 class Die:
     @staticmethod

@@ -1,6 +1,7 @@
 from pico2d import *
 import game_world
 import game_framework
+import play_mode
 
 # princess Run Speed
 PIXEL_PER_METER = (4.0 / 0.2)  # 10 pixel 30 cm
@@ -61,6 +62,7 @@ class BigEffect:
 
     def handle_collision(self, group, other):
         if group == 'mob:effect':
-            pass
+            if play_mode.quest.type == 3:
+                play_mode.quest.num += 1
         if group == 'prince:effect':
             game_world.remove_object(self)

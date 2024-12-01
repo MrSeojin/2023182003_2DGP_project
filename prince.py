@@ -2,7 +2,6 @@ from pico2d import*
 
 import game_framework
 import game_world
-from effect import SmallEffect, BigEffect
 from state_machine import*
 import play_mode
 
