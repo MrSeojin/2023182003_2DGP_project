@@ -2,7 +2,8 @@ from pico2d import load_image
 
 import game_framework
 import game_world
-from prince import Prince
+import play_mode
+import random
 
 # princess Run Speed
 PIXEL_PER_METER = (100.0 / 20)  # 10 pixel 30 cm
@@ -18,7 +19,10 @@ class Background:
         self.x = 0
 
     def update(self):
-        self.x += RUN_SPEED_PPS * game_framework.frame_time
+        if play_mode.princess.action >= 5:
+            self.x += 2 * RUN_SPEED_PPS * game_framework.frame_time
+        else:
+            self.x += RUN_SPEED_PPS * game_framework.frame_time
         if self.x >= 2000:
             self.x = 0
 
@@ -32,12 +36,27 @@ class Background:
 class Fever:
     def __init__(self):
         self.image = load_image('map_background_fever.png')
-        prince = Prince()
-        game_world.add_object(prince, 2)
-        game_world.add_collision_pair('prince:effect', prince, None)
+        self.time_count = 0
 
     def update(self):
-        pass
+        self.time_count += game_framework.frame_time
+        if self.time_count > 10:
+            play_mode.quest.type = 1
+            #play_mode.quest.type = random.randint(1,3)
+            if play_mode.quest.type == 1:
+                play_mode.quest.goalNum = random.randint(10, 15)
+                play_mode.quest.quest_story = f'jump   {play_mode.quest.goalNum}'
+            elif play_mode.quest.type == 2:
+                play_mode.quest.goalNum = random.randint(10, 15)
+                play_mode.quest.quest_story = f'double jump    {play_mode.quest.goalNum}'
+            elif play_mode.quest.type == 3:
+                play_mode.quest.goalNum = random.randint()
+                play_mode.quest.quest_story = f'mob    {play_mode.quest.goalNum}'
+            elif play_mode.quest.type == 4:
+                play_mode.quest.goalNum = random.randint()
+                play_mode.quest.quest_story = f'run    {play_mode.quest.goalNum}'
+            play_mode.fever_time = False
+            game_world.remove_object(self)
 
     def draw(self):
         self.image.clip_draw(0, 0, 1200, 600, 600, 300)

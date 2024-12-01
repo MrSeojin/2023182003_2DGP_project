@@ -4,6 +4,7 @@ import game_framework
 import game_world
 from effect import SmallEffect, BigEffect
 from state_machine import*
+import play_mode
 
 # princess Run Speed
 PIXEL_PER_METER = (10.0 / 0.2)  # 10 pixel 30 cm
@@ -33,12 +34,15 @@ class Run:
     @staticmethod
     def do(prince):
         prince.frame = (prince.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 8
+        if play_mode.fever_time == False:
+            prince.state_machine.add_event(('TIME_OUT', 0))
+
 
     @staticmethod
     def draw(prince):
-        prince.image.clip_draw(int(prince.frame) * 200, prince.action * 200, 200, 200, int(prince.x), int(prince.y) + 100)
+        prince.image.clip_draw(int(prince.frame) * 200, prince.action * 200, 200, 200, int(prince.x), int(prince.y) + 95)
 
-class Fall:
+class GoAway:
     @staticmethod
     def enter(prince, e):
         prince.action = 0
@@ -49,11 +53,14 @@ class Fall:
 
     @staticmethod
     def do(prince):
-        pass
+        prince.frame = (prince.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 8
+        prince.x += RUN_SPEED_PPS * game_framework.frame_time
+        if prince.x > 1300:
+            game_world.remove_object(prince)
 
     @staticmethod
     def draw(prince):
-        prince.image.clip_draw(int(prince.frame) * 200, prince.action * 200, 200, 200, int(prince.x), int(prince.y) + 135)
+        prince.image.clip_draw(int(prince.frame) * 200, prince.action * 200, 200, 200, int(prince.x), int(prince.y) + 95)
 
 class Prince:
     def __init__(self):
@@ -65,8 +72,8 @@ class Prince:
         self.state_machine.start(Run)
         self.state_machine.set_transitions(
             {
-                Run : {},
-                Fall : {}
+                Run : {time_out : GoAway},
+                GoAway : {time_out : GoAway}
             }
         )
     def update(self):
@@ -83,4 +90,5 @@ class Prince:
         draw_rectangle(*self.get_bb())
 
     def handle_collision(self, group, other):
-        pass
+        if group == 'prince:effect':
+            play_mode.score += 5

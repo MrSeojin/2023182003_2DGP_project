@@ -3,6 +3,7 @@ import game_framework
 import random
 
 import game_world
+import play_mode
 from mob import Mob
 
 # princess Run Speed
@@ -19,26 +20,50 @@ class Floor:
         self.image = load_image('grass.png')
 
     def update(self):
-        self.x += RUN_SPEED_PPS * game_framework.frame_time
+        if play_mode.princess.action >= 5:
+            self.x += 2 * RUN_SPEED_PPS * game_framework.frame_time
+        else:
+            self.x += RUN_SPEED_PPS * game_framework.frame_time
 
         if self.x > self.size + 2000:
             game_world.remove_object(self)
 
-        if 0 <= self.x - self.size <= RUN_SPEED_PPS * game_framework.frame_time:
+        if 0 <= self.x - self.size <= RUN_SPEED_PPS * game_framework.frame_time and play_mode.princess.action < 5:
             now_size = random.randint(100, 1200)
             now_hole = random.randint(0, 800)
             floor = Floor(self.x - self.size, now_size, now_hole)
             game_world.add_collision_pair('princess:floor', None, floor)
             game_world.add_collision_pair('mob:floor', None, floor)
             game_world.add_object(floor, 1)
-            if 500 <= now_size or now_hole == 0:
+            if play_mode.fever_time == False and (500 <= now_size or now_hole == 0):
                 mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x), self.size + now_hole + now_size + 2000 - int(self.x)))
                 game_world.add_object(mob, 2)
                 game_world.add_collision_pair('princess:mob', None, mob)
                 game_world.add_collision_pair('mob:effect', mob, None)
                 game_world.add_collision_pair('mob:floor', mob, None)
-            if 800 <= now_size or now_hole == 0:
+            if play_mode.fever_time == False and (800 <= now_size or now_hole == 0):
                 mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x), self.size + now_hole + now_size + 2000 - int(self.x)))
+                game_world.add_object(mob, 2)
+                game_world.add_collision_pair('princess:mob', None, mob)
+                game_world.add_collision_pair('mob:effect', mob, None)
+                game_world.add_collision_pair('mob:floor', mob, None)
+        elif 0 <= self.x - self.size <= 2 * RUN_SPEED_PPS * game_framework.frame_time and play_mode.princess.action >= 5:
+            now_size = random.randint(100, 1200)
+            now_hole = random.randint(0, 800)
+            floor = Floor(self.x - self.size, now_size, now_hole)
+            game_world.add_collision_pair('princess:floor', None, floor)
+            game_world.add_collision_pair('mob:floor', None, floor)
+            game_world.add_object(floor, 1)
+            if play_mode.fever_time == False and (500 <= now_size or now_hole == 0):
+                mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x),
+                                         self.size + now_hole + now_size + 2000 - int(self.x)))
+                game_world.add_object(mob, 2)
+                game_world.add_collision_pair('princess:mob', None, mob)
+                game_world.add_collision_pair('mob:effect', mob, None)
+                game_world.add_collision_pair('mob:floor', mob, None)
+            if play_mode.fever_time == False and (800 <= now_size or now_hole == 0):
+                mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x),
+                                         self.size + now_hole + now_size + 2000 - int(self.x)))
                 game_world.add_object(mob, 2)
                 game_world.add_collision_pair('princess:mob', None, mob)
                 game_world.add_collision_pair('mob:effect', mob, None)

@@ -8,6 +8,8 @@ from floor import Floor
 from prince import Prince
 from princess import Princess
 from mob import Mob
+from quest import Quest
+
 
 def handle_events():
     global running
@@ -29,9 +31,13 @@ def init():
     global floor
     global fever_time
     global score
+    global quest
 
     fever_time = False
     score = 0
+
+    quest = Quest()
+    game_world.add_object(quest, 3)
 
     background = Background()
     game_world.add_object(background, 0)

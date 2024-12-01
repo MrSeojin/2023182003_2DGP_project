@@ -62,3 +62,5 @@ class BigEffect:
     def handle_collision(self, group, other):
         if group == 'mob:effect':
             pass
+        if group == 'prince:effect':
+            game_world.remove_object(self)

@@ -3,7 +3,9 @@ from pico2d import*
 import game_framework
 import game_world
 import play_mode
+from back_ground import Fever
 from effect import SmallEffect, BigEffect
+from prince import Prince
 from state_machine import*
 
 # princess Run Speed
@@ -126,6 +128,8 @@ class Jump:
         if time_out(e):
             princess.frame = 6
         else:
+            if play_mode.quest.type == 1:
+                play_mode.quest.num += 1
             princess.frame = 0
             princess.jump_num += 1
 
@@ -184,6 +188,7 @@ class DoubleJump:
         if time_out(e):
             princess.frame, princess.action = 0, 1
         else:
+
             princess.frame, princess.action = 0, 3
             princess.jump_num += 1
 
@@ -242,19 +247,47 @@ class DoubleJump:
 class Fly:
     @staticmethod
     def enter(princess, e):
-        princess.flyimage = load_image('princess_snow_animation_sheet.png')
+        princess.action = 5
+        princess.frame = 0
 
     @staticmethod
     def exit(princess, e):
-        pass
+        princess.frame = 0
 
     @staticmethod
     def do(princess):
-        princess.state_machine.add_event(('FLY', 0))
+        if princess.action == 5:
+            princess.y += 3 * RUN_SPEED_PPS * game_framework.frame_time
+            princess.x += RUN_SPEED_PPS * game_framework.frame_time
+            if princess.y >= 300:
+                princess.action = 6
+        elif princess.action == 6:
+            princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
+            princess.x += 5 * RUN_SPEED_PPS * game_framework.frame_time
+            if princess.x > 500:
+                princess.x = 500
+            if princess.frame >= 80:
+                princess.action = 0
+                fever = Fever()
+                game_world.add_object(fever, 3)
+        elif princess.action == 0:
+            princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+            princess.x -= 5 * RUN_SPEED_PPS * game_framework.frame_time
+            if princess.x < 300:
+                princess.x = 300
+            if princess.y <= 60:
+                princess.y = 60
+            if play_mode.fever_time and princess.y == 60:
+                princess.x = 300
+                prince = Prince()
+                game_world.add_object(prince, 2)
+                game_world.add_collision_pair('prince:effect', prince, None)
+                princess.jump_num = 0
+                princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
-        princess.flyimage.clip_draw(0, 0, 374, 381, int(princess.x), int(princess.y) + 135)
+        princess.fly_image.clip_draw(0, 0, 374, 381, int(princess.x), int(princess.y) + 135)
 
 class Die:
     @staticmethod
@@ -304,6 +337,7 @@ class Princess:
 
         self.frame, self.action = 0, 0
         self.image = load_image('princess_snow_animation_sheet.png')
+        self.fly_image = load_image('princess_snow_fly.png')
         self.state_machine = StateMachine(self)
         self.state_machine.start(Run)
         self.state_machine.set_transitions(
@@ -313,7 +347,7 @@ class Princess:
                 BigHit : {time_out : DoubleJump, fly_item : Fly, death : Die, fall : Fall, space_down : Jump},
                 Jump : {c_down : BigHit, space_down : DoubleJump,  time_out : Run, fly_item : Fly, death : Die, fall : Fall},
                 DoubleJump : {c_down : BigHit, time_out : Run, fly_item : Fly, death : Die, fall : Fall},
-                Fly : {time_out : Run, space_down : Jump},
+                Fly : {time_out : Run},
                 Fall : {death : Die, space_down : Jump},
                 Die : {time_out : Die}
             }
