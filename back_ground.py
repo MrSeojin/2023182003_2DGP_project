@@ -42,7 +42,7 @@ class Fever:
     def update(self):
         self.time_count += game_framework.frame_time
         if self.time_count > 10:
-            play_mode.quest.type = random.randint(1,4)
+            play_mode.quest.type = random.randint(1,5)
             if play_mode.quest.type == 1:
                 play_mode.quest.goalNum = random.randint(10, 15)
                 play_mode.quest.quest_story = f'jump   {play_mode.quest.goalNum}'
@@ -55,6 +55,9 @@ class Fever:
             elif play_mode.quest.type == 4:
                 play_mode.quest.goalNum = random.randint(200,350)
                 play_mode.quest.quest_story = f'run    {play_mode.quest.goalNum}'
+            elif play_mode.quest.type == 5:
+                play_mode.quest.goalNum = 1
+                play_mode.quest.quest_story = f'get fly_item    {play_mode.quest.goalNum}'
             play_mode.fever_time = False
             game_world.remove_object(self)
 

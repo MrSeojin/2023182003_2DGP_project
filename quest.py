@@ -11,7 +11,7 @@ class Quest:
     def __init__(self):
         self.font = load_font('ENCR10B.TTF', 35)
         self.num = 0
-        self.type = random.randint(1,4)
+        self.type = random.randint(1,5)
         if self.type == 0:
             self.goalNum = 0
             self.quest_story = None
@@ -27,6 +27,9 @@ class Quest:
         elif self.type == 4:
             self.goalNum = random.randint(200, 350)
             self.quest_story = f'run    {self.goalNum}'
+        elif self.type == 5:
+            self.goalNum = 1
+            self.quest_story = f'get fly_item   {self.goalNum}'
 
 
         # X, 점프 n번, 2단 점프 n번, 적 잡기 n번, 몇 거리 달리기..?,

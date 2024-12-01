@@ -2,6 +2,7 @@ from pico2d import*
 import game_framework
 
 import game_world
+import play_mode
 
 # princess Run Speed
 PIXEL_PER_METER = (700.0 / 4.0)  # 10 pixel 10 cm
@@ -27,6 +28,7 @@ class FlyItem:
 
     def handle_collision(self, group, other):
         if group == 'princess:fly_item':
+            play_mode.quest.num += 1
             game_world.remove_object(self)
 
 class DoubleItem:
