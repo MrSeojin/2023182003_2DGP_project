@@ -132,6 +132,8 @@ class Jump:
                 play_mode.quest.num += 1
             princess.frame = 0
             princess.jump_num += 1
+            if princess.jump_num <= 2:
+                Princess.jump_sound.play()
 
     @staticmethod
     def exit(princess, e):
@@ -192,6 +194,8 @@ class DoubleJump:
                 play_mode.quest.num += 1
             princess.frame, princess.action = 0, 3
             princess.jump_num += 1
+            if princess.jump_num <= 2:
+                Princess.jump_sound.play()
 
     @staticmethod
     def exit(princess, e):
@@ -337,10 +341,13 @@ class Fall:
         princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
 
 class Princess:
+    jump_sound = None
     def __init__(self):
         self.x, self.y = 300, 60
         self.fall = False
         self.jump_num = 0
+        Princess.jump_sound = load_wav('princess_jump_sound.wav')
+        Princess.jump_sound.set_volume(32)
 
         self.frame, self.action = 0, 0
         self.image = load_image('princess_snow_animation_sheet.png')
