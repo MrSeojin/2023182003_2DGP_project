@@ -5,11 +5,17 @@ import play_mode
 
 def init():
     global image
+    global title_sound
     image = load_image('title.png')
+    title_sound = load_music('title_sound.mp3')
+    title_sound.set_volume(32)
+    title_sound.repeat_play()
 
 def finish():
     global image
+    global title_sound
     del image
+    del title_sound
 
 def update():
     pass
