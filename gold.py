@@ -16,10 +16,14 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
 class Gold:
+    sound = None
     def __init__(self, x):
         self.x, self.y = x, 350
         self.frame, self.action = 0, 0
         self.image = load_image('coin.png')
+        Gold.sound = load_wav('get_coin.wav')
+        Gold.sound.set_volume(32)
+
     def update(self):
         self.frame = (self.frame + 1) % 4
         self.x -= RUN_SPEED_PPS * game_framework.frame_time
@@ -33,4 +37,5 @@ class Gold:
 
     def handle_collision(self, group, other):
         if group == 'princess:gold':
+            Gold.sound.play()
             game_world.remove_object(self)
