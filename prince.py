@@ -62,11 +62,15 @@ class GoAway:
         prince.image.clip_draw(int(prince.frame) * 200, prince.action * 200, 200, 200, int(prince.x), int(prince.y) + 95)
 
 class Prince:
+    hit_sound = None
     def __init__(self):
         self.x, self.y = 400, 60
 
         self.frame, self.action = 0, 0
         self.image = load_image('prince_animation_sheet.png')
+        Prince.hit_sound = load_wav('prince_damage_sound.wav')
+        Prince.hit_sound.set_volume(32)
+
         self.state_machine = StateMachine(self)
         self.state_machine.start(Run)
         self.state_machine.set_transitions(
@@ -90,4 +94,5 @@ class Prince:
 
     def handle_collision(self, group, other):
         if group == 'prince:effect':
+            Prince.hit_sound.play()
             play_mode.score += 5
