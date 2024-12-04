@@ -1,4 +1,4 @@
-from pico2d import load_image
+from pico2d import load_image, load_music
 
 import game_framework
 import game_world
@@ -13,10 +13,14 @@ RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
 class Background:
+    sound = None
     def __init__(self):
         self.image = load_image('map_background_snow.png')
         self.count = 0
         self.x = 0
+        Background.sound = load_music('background_sound.mp3')
+        Background.sound.set_volume(32)
+        Background.sound.repeat_play()
 
     def update(self):
         if play_mode.princess.action >= 5:
