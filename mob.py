@@ -203,6 +203,7 @@ class Fall:
             mob.image.clip_draw(int(mob.frame) * 65, mob.action * 65, 65, 65, mob.x, mob.y + 30)
 
 class Mob:
+    hit_sound = None
     def __init__(self, x = 1250):
         self.delay = 0
         self.x, self.y = x, 60
@@ -219,6 +220,8 @@ class Mob:
         else:
             self.image = load_image('mob_spots_animation_sheet.png')
             self.hp = 200
+        Mob.hit_sound = load_wav('mob_damage_sound.wav')
+        Mob.hit_sound.set_volume(32)
         self.state_machine = StateMachine(self)
         self.state_machine.start(Idle)
         self.state_machine.set_transitions(
@@ -257,6 +260,7 @@ class Mob:
         if group == 'princess:mob':
             pass
         if group == 'mob:effect':
+            Mob.hit_sound.play()
             game_world.remove_collision_object(self)
             game_world.add_collision_pair('mob:floor', self, None)
             self.state_machine.add_event(('HIT', 0))

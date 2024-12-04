@@ -58,7 +58,7 @@ class Floor:
                     game_world.add_collision_pair('mob:effect', mob, None)
                     game_world.add_collision_pair('mob:floor', mob, None)
         elif 0 <= self.x - self.size <= 2 * RUN_SPEED_PPS * game_framework.frame_time and play_mode.princess.action >= 5:
-            floor = Floor(self.x - self.size, 1200, 800)
+            floor = Floor(self.x - self.size, 1200, 0)
             game_world.add_collision_pair('princess:floor', None, floor)
             game_world.add_collision_pair('mob:floor', None, floor)
             game_world.add_object(floor, 1)

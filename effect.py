@@ -10,8 +10,8 @@ RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
 
-class SmallEffect:
 
+class SmallEffect:
     def __init__(self, x = 400, y = 300):
         self.x, self.y, self.size = x + 150, y, 18
         self.image = load_image('effect_snow.png')
@@ -33,7 +33,10 @@ class SmallEffect:
 
     def handle_collision(self, group, other):
         if group == 'mob:effect':
-            pass
+            if play_mode.quest.type == 3:
+                play_mode.quest.num += 1
+        if group == 'prince:effect':
+            game_world.remove_object(self)
 
 
 class BigEffect:
