@@ -35,7 +35,12 @@ class Run:
         prince.frame = (prince.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 8
         if play_mode.fever_time == False:
             prince.state_machine.add_event(('TIME_OUT', 0))
-
+        prince.x -= RUN_SPEED_PPS * game_framework.frame_time
+        prince.y -= RUN_SPEED_PPS * game_framework.frame_time
+        if prince.y < 60:
+            prince.y = 60
+        if prince.x < 400:
+            prince.x = 400
 
     @staticmethod
     def draw(prince):
@@ -54,6 +59,9 @@ class GoAway:
     def do(prince):
         prince.frame = (prince.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 8
         prince.x += RUN_SPEED_PPS * game_framework.frame_time
+        prince.y -= RUN_SPEED_PPS * game_framework.frame_time
+        if prince.y < 60:
+            prince.y = 60
         if prince.x > 1300:
             game_world.remove_object(prince)
 
@@ -95,4 +103,6 @@ class Prince:
     def handle_collision(self, group, other):
         if group == 'prince:effect':
             Prince.hit_sound.play()
-            play_mode.score += 5
+            self.x += 20
+            self.y += 20
+            play_mode.score += 25
