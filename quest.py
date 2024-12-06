@@ -1,4 +1,4 @@
-from pico2d import load_font
+from pico2d import load_font, load_image
 import random
 
 import game_world
@@ -9,7 +9,8 @@ from prince import Prince
 
 class Quest:
     def __init__(self):
-        self.font = load_font('ENCR10B.TTF', 35)
+        self.font = load_font('packdahyun.ttf', 40)
+        self.image = load_image('quest_image.png')
         self.num = 0
         self.type = random.randint(1,5)
         if self.type == 0:
@@ -17,27 +18,28 @@ class Quest:
             self.quest_story = None
         elif self.type == 1:
             self.goalNum = random.randint(10, 15)
-            self.quest_story = f'jump   {self.goalNum}'
+            self.quest_story = f'점프       {self.goalNum}'
         elif self.type == 2:
             self.goalNum = random.randint(5, 10)
-            self.quest_story = f'double jump    {self.goalNum}'
+            self.quest_story = f'더블 점프  {self.goalNum}'
         elif self.type == 3:
             self.goalNum = random.randint(10, 15)
-            self.quest_story = f'mob    {self.goalNum}'
+            self.quest_story = f'적 처치    {self.goalNum}'
         elif self.type == 4:
             self.goalNum = random.randint(200, 350)
-            self.quest_story = f'run    {self.goalNum}'
+            self.quest_story = f'달리기     {self.goalNum}'
         elif self.type == 5:
             self.goalNum = 1
-            self.quest_story = f'get fly_item   {self.goalNum}'
+            self.quest_story = f'날기       {self.goalNum}'
 
 
         # X, 점프 n번, 2단 점프 n번, 적 잡기 n번, 몇 거리 달리기..?,
 
     def draw(self):
         if self.type > 0:
-            self.font.draw(400, 30, self.quest_story + f' : {int(self.num)}', (5, 5, 5))
-        self.font.draw(500, 550, f'score {int(play_mode.score)}', (0, 0, 0))
+            self.image.clip_draw(0,0,813,184, 600, 10, 400, 50)
+            self.font.draw(550, 10, self.quest_story + f' : {int(self.num)}', (5, 5, 5))
+        self.font.draw(480, 550, f'score {int(play_mode.score)}', (0, 0, 0))
 
     def update(self):
         if self.goalNum <= self.num and self.type!=0:
