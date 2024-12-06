@@ -23,6 +23,8 @@ class Floor:
         if play_mode.princess.action >= 5:
             self.x += 2 * RUN_SPEED_PPS * game_framework.frame_time
             play_mode.score += RUN_SPEED_PPS * game_framework.frame_time / 100
+            if play_mode.quest.type == 4:
+                play_mode.quest.num += 2 * RUN_SPEED_PPS * game_framework.frame_time / 200
         else:
             self.x += RUN_SPEED_PPS * game_framework.frame_time
             play_mode.score += RUN_SPEED_PPS * game_framework.frame_time / 200
