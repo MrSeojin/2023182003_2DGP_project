@@ -2,7 +2,7 @@ import game_framework
 from pico2d import *
 import random
 import game_world
-import title_mode
+import menu_mode
 from back_ground import Background
 from floor import Floor
 from princess import Princess
@@ -18,7 +18,7 @@ def handle_events():
         if event.type == SDL_QUIT:
             game_framework.quit()
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            game_framework.change_mode(title_mode)
+            game_framework.push_mode(menu_mode)
         else:
             princess.handle_event(event)
             if princess.stop:
@@ -36,7 +36,9 @@ def init():
     global distance
     global quest
     global total_score
+    global bgm_play, sound_play
 
+    bgm_play, sound_play = 'play','play'
     fever_time = False
     score = 0
     distance = 0

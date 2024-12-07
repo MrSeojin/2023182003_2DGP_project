@@ -134,7 +134,8 @@ class Jump:
             princess.frame = 0
             princess.jump_num += 1
             if princess.jump_num <= 2:
-                Princess.jump_sound.play()
+                if play_mode.sound_play == 'play':
+                    Princess.jump_sound.play()
 
     @staticmethod
     def exit(princess, e):
@@ -196,7 +197,8 @@ class DoubleJump:
             princess.frame, princess.action = 0, 3
             princess.jump_num += 1
             if princess.jump_num <= 2:
-                Princess.jump_sound.play()
+                if play_mode.sound_play == 'play':
+                    Princess.jump_sound.play()
 
     @staticmethod
     def exit(princess, e):

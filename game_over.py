@@ -7,8 +7,8 @@ import title_mode
 
 class Score:
     def __init__(self):
-        self.image = load_image('game_over_frame.png')
-        self.hand = load_image('click.png')
+        self.image = load_image("game_over_frame.png")
+        self.hand = load_image("click.png")
         self.font = load_font('packdahyun.ttf', 40)
         self.x = 500
 

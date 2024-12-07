@@ -263,7 +263,8 @@ class Mob:
         if group == 'princess:mob':
             pass
         if group == 'mob:effect':
-            Mob.hit_sound.play()
+            if play_mode.sound_play == 'play':
+                Mob.hit_sound.play()
             game_world.remove_collision_object(self)
             game_world.add_collision_pair('mob:floor', self, None)
             self.state_machine.add_event(('HIT', 0))

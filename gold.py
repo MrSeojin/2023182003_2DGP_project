@@ -23,6 +23,7 @@ class Gold:
         self.frame, self.action = 0, 0
         self.image = load_image('coin.png')
         Gold.sound = load_wav('get_coin.wav')
+
         Gold.sound.set_volume(32)
 
     def update(self):
@@ -39,5 +40,6 @@ class Gold:
 
     def handle_collision(self, group, other):
         if group == 'princess:gold':
-            Gold.sound.play()
+            if play_mode.sound_play == 'play':
+                Gold.sound.play()
             game_world.remove_object(self)

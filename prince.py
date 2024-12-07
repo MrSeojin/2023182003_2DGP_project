@@ -102,7 +102,8 @@ class Prince:
 
     def handle_collision(self, group, other):
         if group == 'prince:effect':
-            Prince.hit_sound.play()
+            if play_mode.sound_play == 'play':
+                Prince.hit_sound.play()
             self.x += 20
             self.y += 20
             play_mode.score += 5
