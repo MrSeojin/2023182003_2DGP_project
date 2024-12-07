@@ -26,11 +26,11 @@ class Pannel:
         elif self.click == 1:
             self.hand.draw(850, 450)
         elif self.click == 2:
-            self.hand.draw(550, 200)
+            self.hand.draw(560, 120)
         elif self.click == 3:
-            self.hand.draw(650, 200)
+            self.hand.draw(650, 120)
         elif self.click == 4:
-            self.hand.draw(750, 200)
+            self.hand.draw(740, 120)
 
     def update(self):
         pass
