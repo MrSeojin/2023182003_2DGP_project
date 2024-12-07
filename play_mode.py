@@ -7,6 +7,7 @@ from back_ground import Background
 from floor import Floor
 from princess import Princess
 from quest import Quest
+from game_over import Score
 
 
 def handle_events():
@@ -20,6 +21,8 @@ def handle_events():
             game_framework.change_mode(title_mode)
         else:
             princess.handle_event(event)
+            if princess.stop:
+                total_score.handle_event(event)
 
 def init():
     global world
@@ -32,12 +35,13 @@ def init():
     global gold
     global distance
     global quest
+    global total_score
 
     fever_time = False
     score = 0
     distance = 0
     gold = 0
-
+    total_score = None
 
     quest = Quest()
     game_world.add_object(quest, 3)

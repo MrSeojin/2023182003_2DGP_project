@@ -308,8 +308,8 @@ class Die:
     @staticmethod
     def exit(princess, e):
         princess.stop = True
-        total_score = Score()
-        game_world.add_object(total_score, 3)
+        play_mode.total_score = Score()
+        game_world.add_object(play_mode.total_score, 3)
 
 
     @staticmethod
