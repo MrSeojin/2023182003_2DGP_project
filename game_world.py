@@ -65,6 +65,13 @@ def add_collision_pair(group, a, b):
     if b:
         collision_pairs[group][1].append(b)
 
+def group_collision(get_group):
+    for group, pairs in collision_pairs.items():
+        if group == get_group:
+            for a in pairs[0]:
+                for b in pairs[1]:
+                    collide(a, b)
+
 def handle_collisions():
     for group, pairs in collision_pairs.items():
         for a in pairs[0]:

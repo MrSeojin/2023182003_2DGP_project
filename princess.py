@@ -396,7 +396,11 @@ class Princess:
         )
     def update(self):
         self.state_machine.update()
-        self.fall = True
+        if game_world.group_collision('princess:floor'):
+            self.fall = False
+        else:
+            self.fall = True
+
 
     def get_bb(self):
         return self.x - 100, self.y + 20, self.x - 10, self.y + 170
