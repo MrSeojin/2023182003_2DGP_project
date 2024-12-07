@@ -56,6 +56,8 @@ class Pannel:
             elif self.click == 2:
                 game_framework.pop_mode()
             elif self.click == 3:
+                game_framework.pop_mode()
                 game_framework.change_mode(play_mode)
             elif self.click == 4:
+                game_framework.pop_mode()
                 game_framework.change_mode(title_mode)
