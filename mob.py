@@ -3,6 +3,7 @@ import random
 
 import game_framework
 import game_world
+import play_mode
 from gold import Gold
 from item import FlyItem
 from state_machine import*
@@ -213,13 +214,10 @@ class Mob:
         self.fall = False
         if self.type == 0:
             self.image = load_image('mob_slime_animation_sheet.png')
-            self.hp = 150
         elif self.type == 1:
             self.image = load_image('mob_blue_animation_sheet.png')
-            self.hp = 180
         else:
             self.image = load_image('mob_spots_animation_sheet.png')
-            self.hp = 200
         Mob.hit_sound = load_wav('mob_damage_sound.wav')
         Mob.hit_sound.set_volume(32)
         self.state_machine = StateMachine(self)
@@ -235,12 +233,17 @@ class Mob:
             }
         )
     def update(self):
-        self.delay += 1
-        if self.delay % 2:
-            self.state_machine.update()
-
-        if self.hp <=0:
-            pass
+        if play_mode.princess.stop:
+            self.y += RUN_SPEED_PPS * game_framework.frame_time / 2 * self.dir
+            if self.y <= 60:
+                self.y = 60
+                self.dir = 1
+            elif self.y > 100:
+                self.dir = -1
+        else:
+            self.delay += 1
+            if self.delay % 2:
+                self.state_machine.update()
         self.fall = True
 
     def handle_event(self, event):

@@ -6,6 +6,7 @@ import play_mode
 from back_ground import Fever
 from effect import SmallEffect, BigEffect
 from prince import Prince
+from game_over import Score
 from state_machine import*
 
 # princess Run Speed
@@ -255,7 +256,6 @@ class Fly:
         princess.action = 5
         princess.frame = 0
         if play_mode.fever_time:
-
             pass
 
     @staticmethod
@@ -271,7 +271,7 @@ class Fly:
                 princess.action = 6
                 if play_mode.fever_time:
                     fever = Fever()
-                    game_world.add_object(fever, 3)
+                    game_world.add_object(fever, 0)
         elif princess.action == 6:
             princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
             princess.x += 5 * RUN_SPEED_PPS * game_framework.frame_time
@@ -307,14 +307,20 @@ class Die:
 
     @staticmethod
     def exit(princess, e):
-        game_world.remove_object(princess)
+        princess.stop = True
+        total_score = Score()
+        game_world.add_object(total_score, 3)
+
 
     @staticmethod
     def do(princess):
-        princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time / 5
+        if princess.stop:
+            pass
+        else:
+            princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time / 5
 
-        if princess.frame >= 16:
-            princess.state_machine.add_event(('TIME_OUT', 0))
+            if princess.frame >= 16:
+                princess.state_machine.add_event(('TIME_OUT', 0))
 
     @staticmethod
     def draw(princess):
@@ -348,6 +354,7 @@ class Princess:
         self.jump_num = 0
         Princess.jump_sound = load_wav('princess_jump_sound.wav')
         Princess.jump_sound.set_volume(32)
+        self.stop = False
 
         self.frame, self.action = 0, 0
         self.image = load_image('princess_snow_animation_sheet.png')
@@ -386,7 +393,7 @@ class Princess:
         if group == 'princess:mob':
             self.state_machine.add_event(('DEATH', 0))
         if group == 'princess:gold':
-            play_mode.score += 1
+            play_mode.gold += 1
         if group == 'princess:fly_item':
             self.state_machine.add_event(('FLY_ITEM', 0))
         if group == 'princess:double_item':
