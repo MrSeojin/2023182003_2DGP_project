@@ -1,0 +1,21 @@
+# pyinstaller 로 exe 를 build 하기 위한 설정
+
+# 1. 메인 파일 이름을 지정하세요.
+main_file = 'main.py'
+
+# 2. 데이타 파일들을 지정하세요.
+data_files = [
+    'background_sound.mp3','title_sound.mp3', 'get_coin.wav', 'mob_damage_sound.wav', 'prince_damage_sound.wav', 'princess_jump_sound.wav',
+    'title.png','tuk_credit.png',
+    'click.png', 'coin.png', 'effect_snow.png',
+    'menu_frame.png', 'bgm_mute.png', 'bgm_play.png', 'sound_mute.png', 'sound_play.png',
+    'game_over_frame.png', 'grass.png', 'item_fly.png', 'kick_the_prince.png', 'map_background_fever.png', 'map_background_snow.png',
+    'mob_blue_animation_sheet.png', 'mob_slime_animation_sheet.png', 'mob_spots_animation_sheet.png', 'prince_animation_sheet.png','princess_snow_animation_sheet.png','princess_snow_fly.png',
+    'quest_image.png',
+    'packdahyun.TTF'
+]
+
+# 3. 데이타가 들어있는 폴더들을 지정하세요.
+data_folders = [
+]
+
