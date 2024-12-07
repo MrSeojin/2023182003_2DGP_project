@@ -2,6 +2,7 @@ from pico2d import*
 
 import game_framework
 import game_world
+import play_mode
 
 # princess Run Speed
 PIXEL_PER_METER = (35.0 / 0.2)  # 10 pixel 10 cm
@@ -26,7 +27,8 @@ class Gold:
 
     def update(self):
         self.frame = (self.frame + 1) % 4
-        self.x -= RUN_SPEED_PPS * game_framework.frame_time
+        if play_mode.princess.stop == False:
+            self.x -= RUN_SPEED_PPS * game_framework.frame_time
 
     def get_bb(self):
         return self.x - 25, self.y - 25, self.x + 25, self.y + 25

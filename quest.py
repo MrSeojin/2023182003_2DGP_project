@@ -11,6 +11,7 @@ class Quest:
     def __init__(self):
         self.font = load_font('packdahyun.ttf', 40)
         self.image = load_image('quest_image.png')
+        self.coin_image = load_image('coin.png')
         self.num = 0
         self.type = random.randint(1,5)
         if self.type == 0:
@@ -39,7 +40,10 @@ class Quest:
         if self.type > 0:
             self.image.clip_draw(0,0,813,184, 600, 10, 400, 50)
             self.font.draw(550, 10, self.quest_story + f' : {int(self.num)}', (5, 5, 5))
-        self.font.draw(480, 550, f'score {int(play_mode.score)}', (0, 0, 0))
+        self.font.draw(480, 550, f'score {play_mode.score}', (0, 0, 0))
+        self.font.draw(1000, 500, f'거리 {int(play_mode.distance)}', (0, 0, 0))
+        self.coin_image.clip_draw(25, 0, 25, 25, 1020, 450)
+        self.font.draw(1050, 450, f'{play_mode.gold}', (0, 0, 0))
 
     def update(self):
         if self.goalNum <= self.num and self.type!=0:

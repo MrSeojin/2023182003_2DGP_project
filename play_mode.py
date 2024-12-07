@@ -29,10 +29,15 @@ def init():
     global floor
     global fever_time
     global score
+    global gold
+    global distance
     global quest
 
     fever_time = False
     score = 0
+    distance = 0
+    gold = 0
+
 
     quest = Quest()
     game_world.add_object(quest, 3)

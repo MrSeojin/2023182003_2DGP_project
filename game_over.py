@@ -10,7 +10,9 @@ class Score:
 
     def draw(self):
         self.image.draw(600, 300)
-        self.font.draw(640, 230, f'{int(play_mode.score)}',(0,0,5))
+        self.font.draw(700, 390, f'{play_mode.gold}',(200,180,50))
+        self.font.draw(700, 360, f'{int(play_mode.distance)}',(120,180,255))
+        self.font.draw(640, 230, f'{int(play_mode.distance) + play_mode.score * 10 + play_mode.gold}',(120,180,255))
 
     def update(self):
         pass

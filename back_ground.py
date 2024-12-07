@@ -23,12 +23,17 @@ class Background:
         Background.sound.repeat_play()
 
     def update(self):
-        if play_mode.princess.action >= 5:
-            self.x += 2 * RUN_SPEED_PPS * game_framework.frame_time
+        if play_mode.princess.stop:
+            pass
         else:
-            self.x += RUN_SPEED_PPS * game_framework.frame_time
-        if self.x >= 2000:
-            self.x = 0
+            if play_mode.princess.action >= 5:
+                self.x += 2 * RUN_SPEED_PPS * game_framework.frame_time
+                play_mode.distance += 2 * RUN_SPEED_PPS * game_framework.frame_time
+            else:
+                self.x += RUN_SPEED_PPS * game_framework.frame_time
+                play_mode.distance += RUN_SPEED_PPS * game_framework.frame_time
+            if self.x >= 2000:
+                self.x = 0
 
     def draw(self):
         if self.x > 800:

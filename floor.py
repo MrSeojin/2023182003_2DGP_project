@@ -20,50 +20,51 @@ class Floor:
         self.image = load_image('grass.png')
 
     def update(self):
-        if play_mode.princess.action >= 5:
-            self.x += 2 * RUN_SPEED_PPS * game_framework.frame_time
-            play_mode.score += RUN_SPEED_PPS * game_framework.frame_time / 100
-            if play_mode.quest.type == 4:
-                play_mode.quest.num += 2 * RUN_SPEED_PPS * game_framework.frame_time / 200
+        if play_mode.princess.stop:
+            pass
         else:
-            self.x += RUN_SPEED_PPS * game_framework.frame_time
-            play_mode.score += RUN_SPEED_PPS * game_framework.frame_time / 200
-            if play_mode.quest.type == 4:
-                play_mode.quest.num += RUN_SPEED_PPS * game_framework.frame_time / 200
+            if play_mode.princess.action >= 5:
+                self.x += 2 * RUN_SPEED_PPS * game_framework.frame_time
+                if play_mode.quest.type == 4:
+                    play_mode.quest.num += 2 * RUN_SPEED_PPS * game_framework.frame_time / 200
+            else:
+                self.x += RUN_SPEED_PPS * game_framework.frame_time
+                if play_mode.quest.type == 4:
+                    play_mode.quest.num += RUN_SPEED_PPS * game_framework.frame_time / 200
 
-        if self.x > self.size + 2000:
-            game_world.remove_object(self)
+            if self.x > self.size + 2000:
+                game_world.remove_object(self)
 
-        if 0 <= self.x - self.size <= RUN_SPEED_PPS * game_framework.frame_time and play_mode.princess.action < 5:
-            if play_mode.fever_time == True:
+            if 0 <= self.x - self.size <= RUN_SPEED_PPS * game_framework.frame_time and play_mode.princess.action < 5:
+                if play_mode.fever_time == True:
+                    floor = Floor(self.x - self.size, 1200, 0)
+                    game_world.add_collision_pair('princess:floor', None, floor)
+                    game_world.add_collision_pair('mob:floor', None, floor)
+                    game_world.add_object(floor, 1)
+                else:
+                    now_size = random.randint(100, 1200)
+                    now_hole = random.randint(0, 800)
+                    floor = Floor(self.x - self.size, now_size, now_hole)
+                    game_world.add_collision_pair('princess:floor', None, floor)
+                    game_world.add_collision_pair('mob:floor', None, floor)
+                    game_world.add_object(floor, 1)
+                    if play_mode.fever_time == False and (500 <= now_size or now_hole == 0):
+                        mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x), self.size + now_hole + now_size + 2000 - int(self.x)))
+                        game_world.add_object(mob, 2)
+                        game_world.add_collision_pair('princess:mob', None, mob)
+                        game_world.add_collision_pair('mob:effect', mob, None)
+                        game_world.add_collision_pair('mob:floor', mob, None)
+                    if play_mode.fever_time == False and (800 <= now_size or now_hole == 0):
+                        mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x), self.size + now_hole + now_size + 2000 - int(self.x)))
+                        game_world.add_object(mob, 2)
+                        game_world.add_collision_pair('princess:mob', None, mob)
+                        game_world.add_collision_pair('mob:effect', mob, None)
+                        game_world.add_collision_pair('mob:floor', mob, None)
+            elif 0 <= self.x - self.size <= 2 * RUN_SPEED_PPS * game_framework.frame_time and play_mode.princess.action >= 5:
                 floor = Floor(self.x - self.size, 1200, 0)
                 game_world.add_collision_pair('princess:floor', None, floor)
                 game_world.add_collision_pair('mob:floor', None, floor)
                 game_world.add_object(floor, 1)
-            else:
-                now_size = random.randint(100, 1200)
-                now_hole = random.randint(0, 800)
-                floor = Floor(self.x - self.size, now_size, now_hole)
-                game_world.add_collision_pair('princess:floor', None, floor)
-                game_world.add_collision_pair('mob:floor', None, floor)
-                game_world.add_object(floor, 1)
-                if play_mode.fever_time == False and (500 <= now_size or now_hole == 0):
-                    mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x), self.size + now_hole + now_size + 2000 - int(self.x)))
-                    game_world.add_object(mob, 2)
-                    game_world.add_collision_pair('princess:mob', None, mob)
-                    game_world.add_collision_pair('mob:effect', mob, None)
-                    game_world.add_collision_pair('mob:floor', mob, None)
-                if play_mode.fever_time == False and (800 <= now_size or now_hole == 0):
-                    mob = Mob(random.randint(self.size + now_hole + 2000 - int(self.x), self.size + now_hole + now_size + 2000 - int(self.x)))
-                    game_world.add_object(mob, 2)
-                    game_world.add_collision_pair('princess:mob', None, mob)
-                    game_world.add_collision_pair('mob:effect', mob, None)
-                    game_world.add_collision_pair('mob:floor', mob, None)
-        elif 0 <= self.x - self.size <= 2 * RUN_SPEED_PPS * game_framework.frame_time and play_mode.princess.action >= 5:
-            floor = Floor(self.x - self.size, 1200, 0)
-            game_world.add_collision_pair('princess:floor', None, floor)
-            game_world.add_collision_pair('mob:floor', None, floor)
-            game_world.add_object(floor, 1)
 
     def get_bb(self):
         return 2000 - int(self.x), 40, self.size + 2000 - int(self.x), 85

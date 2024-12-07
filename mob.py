@@ -267,5 +267,6 @@ class Mob:
             game_world.remove_collision_object(self)
             game_world.add_collision_pair('mob:floor', self, None)
             self.state_machine.add_event(('HIT', 0))
+            play_mode.score += 1
         if group == 'mob:floor':
             self.fall = False

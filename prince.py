@@ -105,4 +105,4 @@ class Prince:
             Prince.hit_sound.play()
             self.x += 20
             self.y += 20
-            play_mode.score += 25
+            play_mode.score += 5
