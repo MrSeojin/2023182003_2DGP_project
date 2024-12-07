@@ -47,7 +47,7 @@ class Run:
            princess.state_machine.add_event(('FALL', 0))
         elif princess.y < 60:
            princess.state_machine.add_event(('FALL', 0))
-
+    
     @staticmethod
     def draw(princess):
         princess.image.clip_draw(int(princess.frame) * 300, princess.action * 300, 300, 300, int(princess.x), int(princess.y) + 135)
@@ -82,16 +82,17 @@ class Hit:
             princess.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
             if princess.frame >= 16:
                 princess.frame = 10
-                if 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time <= princess.y <= 60:
-                    princess.y = 60
+
                 if princess.fall and princess.y < 60:
                     princess.state_machine.add_event(('FALL', 0))
                 else:
                     princess.state_machine.add_event(('TIME_OUT', 0))
-            princess.y -= RUN_SPEED_PPS * game_framework.frame_time
 
-            if 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time <= princess.y <= 60:
+            if 60 <= princess.y < 60 + 3 * RUN_SPEED_PPS * game_framework.frame_time:
                 princess.y = 60
+            else:
+                princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+
             if princess.y <= 60:
                 if princess.fall and princess.y < 60:
                     princess.state_machine.add_event(('FALL', 0))
@@ -124,18 +125,17 @@ class BigHit:
         princess.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
         if princess.frame >= 16:
             princess.frame = 10
-            if 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time <= princess.y <= 60:
-                princess.y = 60
             if princess.fall and princess.y <= 60:
                 princess.state_machine.add_event(('FALL', 0))
             else:
                 princess.state_machine.add_event(('TIME_OUT', 0))
-        princess.y -= RUN_SPEED_PPS * game_framework.frame_time
-
-        if 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time <= princess.y <= 60:
+        if 60 <= princess.y < 60 + 3 * RUN_SPEED_PPS * game_framework.frame_time:
             princess.y = 60
+        else:
+            princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+
         if princess.y <= 60:
-            if princess.fall and princess.y <= 60:
+            if princess.fall:
                 princess.state_machine.add_event(('FALL', 0))
             else:
                 princess.state_machine.add_event(('TIME_OUT', 0))
@@ -176,7 +176,10 @@ class Jump:
                 else:
                     if int(princess.frame) < 9 and princess.y < 60:
                         princess.state_machine.add_event(('FALL', 0))
-                    princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+                    if 60 <= princess.y < 60 + 3 * RUN_SPEED_PPS * game_framework.frame_time:
+                        princess.y = 60
+                    else:
+                        princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
 
                     if princess.action != 3 and 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time < princess.y <= 60:
                         princess.y = 60
@@ -184,22 +187,21 @@ class Jump:
                         if princess.fall and princess.y <= 60:
                             princess.state_machine.add_event(('FALL', 0))
                         else:
-                            princess.jump_num = 0
                             princess.state_machine.add_event(('TIME_OUT', 0))
                 if princess.frame >= 12:
                     princess.action = 0
                     princess.frame = 10
             else:
                 princess.frame = (princess.frame + FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time) % 16
-                princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
-
-                if princess.action != 3 and 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time < princess.y <= 60:
+                if 60 <= princess.y < 60 + 3 * RUN_SPEED_PPS * game_framework.frame_time:
                     princess.y = 60
+                else:
+                    princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+
                 if princess.action != 3 and princess.y <= 60:
                     if princess.fall and princess.y <= 60:
                         princess.state_machine.add_event(('FALL', 0))
                     else:
-                        princess.jump_num = 0
                         princess.state_machine.add_event(('TIME_OUT', 0))
 
 
@@ -240,10 +242,11 @@ class DoubleJump:
                         princess.state_machine.add_event(('FALL', 0))
             elif princess.action == 1:
                 princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME * game_framework.frame_time
-                princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
-
-                if princess.action != 3 and 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time < princess.y <= 60:
+                if 60 <= princess.y < 60 + 3 * RUN_SPEED_PPS * game_framework.frame_time:
                     princess.y = 60
+                else:
+                    princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+
                 if princess.action != 3 and princess.y <= 60:
                     if princess.fall and princess.y <= 60:
                         princess.state_machine.add_event(('FALL', 0))
@@ -294,7 +297,7 @@ class Fly:
                     fever = Fever()
                     game_world.add_object(fever, 0)
         elif princess.action == 6:
-            princess.frame += FRAMES_PER_ACTION*ACTION_PER_TIME*game_framework.frame_time
+            princess.frame += FRAMES_PER_ACTION * ACTION_PER_TIME*game_framework.frame_time
             princess.x += 5 * RUN_SPEED_PPS * game_framework.frame_time
             if princess.x > 500:
                 princess.x = 500
@@ -366,10 +369,11 @@ class LastJump:
                         princess.state_machine.add_event(('FALL', 0))
             elif princess.action == 1:
                 princess.frame += FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time
-                princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
-
-                if princess.action != 3 and 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time < princess.y <= 60:
+                if 60 <= princess.y < 60 + 3 * RUN_SPEED_PPS * game_framework.frame_time:
                     princess.y = 60
+                else:
+                    princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+
                 if princess.action != 3 and princess.y <= 60:
                     if princess.fall and princess.y <= 60:
                         princess.state_machine.add_event(('FALL', 0))
@@ -382,10 +386,11 @@ class LastJump:
                     princess.frame = 10
             else:
                 princess.frame = (princess.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16
-                princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
-
-                if princess.action != 3 and 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time < princess.y <= 60:
+                if 60 <= princess.y < 60 + 3 * RUN_SPEED_PPS * game_framework.frame_time:
                     princess.y = 60
+                else:
+                    princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+
                 if princess.action != 3 and princess.y <= 60:
                     if princess.fall and princess.y <= 60:
                         princess.state_machine.add_event(('FALL', 0))
@@ -400,10 +405,11 @@ class LastJump:
                 else:
                     if int(princess.frame) < 9 and princess.y < 60:
                         princess.state_machine.add_event(('FALL', 0))
-                    princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
-
-                    if princess.action != 3 and 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time < princess.y <= 60:
+                    if 60 <= princess.y < 60 + 3 * RUN_SPEED_PPS * game_framework.frame_time:
                         princess.y = 60
+                    else:
+                        princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+
                     if princess.action != 3 and princess.y <= 60:
                         if princess.fall and princess.y <= 60:
                             princess.state_machine.add_event(('FALL', 0))
@@ -415,10 +421,11 @@ class LastJump:
                     princess.frame = 10
             else:
                 princess.frame = (princess.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 16
-                princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
-
-                if princess.action != 3 and 60 - 3 * RUN_SPEED_PPS * game_framework.frame_time < princess.y <= 60:
+                if 60 <= princess.y < 60 + 3 * RUN_SPEED_PPS * game_framework.frame_time:
                     princess.y = 60
+                else:
+                    princess.y -= 3 * RUN_SPEED_PPS * game_framework.frame_time
+
                 if princess.action != 3 and princess.y <= 60:
                     if princess.fall and princess.y <= 60:
                         princess.state_machine.add_event(('FALL', 0))
