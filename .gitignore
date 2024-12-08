@@ -153,3 +153,8 @@ fabric.properties
 # End of https://www.gitignore.io/api/python,pycharm
 *.pptx
 *.mp4
+coin_plus.png
+menu.png
+mob_slime.png
+mob_blue.png
+mob_spots.png
